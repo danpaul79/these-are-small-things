@@ -72,9 +72,10 @@
         @media(max-width:900px){
             .product-layout{grid-template-columns:1fr;gap:2rem}
             .product-gallery{position:static}
-            nav{flex-wrap:wrap;justify-content:center;padding:1rem 2%;align-items:flex-start;min-height:auto}
-            .logo{width:100%;justify-content:center;margin-bottom:0.5rem}
-            .nav-links{margin-top:0.5rem;width:100%;justify-content:center;gap:1.5rem;flex-wrap:wrap;padding:0}
+            nav{flex-wrap:wrap;justify-content:center;padding:1rem 2%;align-items:center;min-height:80px}
+            .logo{width:100%;justify-content:center;margin-bottom:0.5rem;order:1}
+            .nav-links{margin-top:0.5rem;width:100%;justify-content:center;gap:1.5rem;flex-wrap:wrap;padding:0;order:2;display:flex!important}
+            .nav-links li{display:block}
             .product-page{padding-top:10rem}
         }
     </style>
