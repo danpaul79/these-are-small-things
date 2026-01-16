@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Product | These Are Small Things</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root{--warm-cream:#FAF7F2;--soft-gold:#C9A227;--deep-teal:#2D5A5A;--charcoal:#3D3D3D;--light-sage:#E8EDE4;--antique-white:#F5F0E8}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Outfit',sans-serif;font-weight:300;background-color:var(--warm-cream);color:var(--charcoal);line-height:1.7}
+        nav{position:fixed;top:0;width:100%;padding:1.2rem 4%;display:flex;justify-content:space-between;align-items:center;z-index:100;background:var(--warm-cream);box-shadow:0 2px 20px rgba(0,0,0,0.06)}
+        .logo{display:flex;align-items:center;gap:0.8rem;text-decoration:none}
+        .logo img{height:45px}
+        .logo-text{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;color:var(--charcoal)}
+        .nav-links{display:flex;gap:2.5rem;list-style:none}
+        .nav-links a{text-decoration:none;color:var(--charcoal);font-size:0.9rem;letter-spacing:0.05em;text-transform:uppercase}
+        .product-page{padding:8rem 4% 4rem;max-width:1400px;margin:0 auto}
+        .back-link{display:inline-flex;align-items:center;gap:0.5rem;color:var(--charcoal);text-decoration:none;font-size:0.9rem;margin-bottom:2rem;opacity:0.7}
+        .back-link:hover{opacity:1}
+        .product-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:2rem}
+        .product-gallery{position:sticky;top:7rem}
+        .carousel-container{position:relative;width:100%;min-height:400px;border-radius:8px;overflow:hidden;background:white;box-shadow:0 4px 20px rgba(0,0,0,0.08);cursor:zoom-in;display:flex;align-items:center}
+        .carousel-track{display:flex;transition:transform 0.4s ease;width:100%}
+        .carousel-slide{min-width:100%;display:flex;align-items:center;justify-content:center;padding:2rem}
+        .carousel-slide img{max-width:100%;height:auto;max-height:600px;object-fit:contain;cursor:zoom-in}
+        .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.9);border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,0.1);z-index:10}
+        .carousel-btn svg{width:20px;height:20px}
+        .carousel-btn.prev{left:1rem}
+        .carousel-btn.next{right:1rem}
+        .carousel-btn:hover{background:white}
+        .carousel-btn.hidden{display:none}
+        .thumbnails{display:flex;gap:1rem;margin-top:1rem}
+        .thumbnail{flex:1;aspect-ratio:1;border-radius:4px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border 0.2s;background:white;display:flex;align-items:center;justify-content:center;padding:0.25rem}
+        .thumbnail img{max-width:100%;max-height:100%;object-fit:contain}
+        .thumbnail.active{border-color:var(--soft-gold)}
+        .single-image{width:100%;min-height:400px;border-radius:8px;overflow:hidden;background:white;box-shadow:0 4px 20px rgba(0,0,0,0.08);cursor:zoom-in;display:flex;align-items:center;justify-content:center;padding:2rem}
+        .single-image img{max-width:100%;height:auto;max-height:600px;object-fit:contain;cursor:zoom-in}
+        
+        /* Image Lightbox/Zoom */
+        .lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:1000;cursor:zoom-out}
+        .lightbox.active{display:flex;align-items:center;justify-content:center;animation:fadeIn 0.3s}
+        .lightbox img{max-width:95%;max-height:95%;object-fit:contain}
+        .lightbox-close{position:absolute;top:20px;right:20px;color:white;font-size:40px;cursor:pointer;background:rgba(0,0,0,0.5);width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        .product-category-tag{display:inline-block;padding:0.4rem 1rem;background:var(--light-sage);border-radius:20px;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+        .product-title{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:500;margin-bottom:1rem}
+        .product-price{font-size:2rem;color:var(--soft-gold);margin-bottom:1.5rem}
+        .product-description{font-size:1.1rem;line-height:1.8;margin-bottom:2rem}
+        .product-details-list{background:var(--antique-white);padding:1.5rem;border-radius:8px;margin-bottom:2rem}
+        .product-details-list h4{font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin-bottom:1rem}
+        .product-details-list ul{list-style:none;display:flex;flex-direction:column;gap:0.5rem}
+        .product-details-list li{font-size:0.95rem}
+        .btn{padding:1rem 2.5rem;border:none;border-radius:4px;font-size:1rem;cursor:pointer;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em;font-weight:400}
+        .btn-primary{background:var(--soft-gold);color:white}
+        .btn-primary:hover{background:#B89120;transform:translateY(-2px);box-shadow:0 4px 12px rgba(201,162,39,0.3)}
+        .shipping-note{margin-top:1.5rem;font-size:0.9rem;color:#666;font-style:italic}
+        .sold-out{background:#999;cursor:not-allowed}
+        .sold-out:hover{background:#999;transform:none;box-shadow:none}
+        footer{background:var(--charcoal);color:var(--warm-cream);text-align:center;padding:3rem 4%;margin-top:6rem}
+        .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;margin-bottom:0.5rem}
+        .footer-tagline{font-size:0.9rem;opacity:0.8}
+        .error-message{text-align:center;padding:4rem 2rem}
+        .error-message h2{font-family:'Cormorant Garamond',serif;font-size:2rem;margin-bottom:1rem}
+        @media(max-width:900px){
+            .product-layout{grid-template-columns:1fr;gap:2rem}
+            .product-gallery{position:static}
+            nav{flex-wrap:wrap;justify-content:center}
+            .nav-links{margin-top:1rem}
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="images/logo.png" alt="Logo" onerror="this.style.display='none'">
+            <span class="logo-text">These Are Small Things</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html#shop">Shop</a></li>
+			<li><a href="index.html#about">About</a></li>
+        </ul>
+    </nav>
+    <main class="product-page">
+        <a href="index.html" class="back-link">← Back to Shop</a>
+        <div id="product-container">
+            <!-- Product content will be loaded here -->
+        </div>
+    </main>
+    
+    <!-- Image Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="Zoomed image">
+    </div>
+    
+    <footer>
+        <p class="footer-logo">These Are Small Things</p>
+        <p class="footer-tagline">Handcrafted art from vintage treasures • Columbus, Ohio</p>
+    </footer>
+    
+    <script>
+        // Get product ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+        
+        let currentSlide = 0;
+        let totalSlides = 0;
+        let productData = null;
+        
+        // Load product data
+        async function loadProduct() {
+            if (!productId) {
+                showError('No product selected');
+                return;
+            }
+            
+            try {
+                const response = await fetch('products.json');
+                const data = await response.json();
+                const product = data.products.find(p => p.id === productId);
+                
+                if (!product) {
+                    showError('Product not found');
+                    return;
+                }
+                
+                if (!product.available) {
+                    showSoldOut(product);
+                    return;
+                }
+                
+                productData = product;
+                displayProduct(product);
+            } catch (error) {
+                console.error('Error loading product:', error);
+                showError('Error loading product data');
+            }
+        }
+        
+        function displayProduct(product) {
+            // Update page title
+            document.getElementById('page-title').textContent = `${product.name} | These Are Small Things`;
+            
+            const container = document.getElementById('product-container');
+            const hasMultipleImages = product.images.length > 1;
+            
+            // Build gallery HTML
+            let galleryHTML = '';
+            if (hasMultipleImages) {
+                galleryHTML = `
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="carouselTrack">
+                            ${product.images.map(img => `
+                                <div class="carousel-slide">
+                                    <img src="images/products/${img}" alt="${product.name}">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="carousel-btn prev" onclick="moveCarousel(-1)">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                        </button>
+                        <button class="carousel-btn next" onclick="moveCarousel(1)">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="thumbnails">
+                        ${product.images.map((img, index) => `
+                            <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})">
+                                <img src="images/products/${img}" alt="Thumbnail ${index + 1}">
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                totalSlides = product.images.length;
+            } else {
+                galleryHTML = `
+                    <div class="single-image">
+                        <img src="images/products/${product.images[0]}" alt="${product.name}">
+                    </div>
+                `;
+            }
+            
+            // Build details list
+            const detailsHTML = Object.entries(product.details).map(([key, value]) => 
+                `<li><strong>${key}:</strong> ${value}</li>`
+            ).join('');
+            
+            container.innerHTML = `
+                <div class="product-layout">
+                    <div class="product-gallery">
+                        ${galleryHTML}
+                    </div>
+                    <div class="product-details">
+                        <span class="product-category-tag">${product.category}</span>
+                        <h1 class="product-title">${product.name}</h1>
+                        <p class="product-price">$${product.price}</p>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-details-list">
+                            <h4>Details</h4>
+                            <ul>${detailsHTML}</ul>
+                        </div>
+                        <button class="btn btn-primary" onclick="buyProduct('${product.name}', ${product.price})">
+                            Purchase This Piece
+                        </button>
+                        <p class="shipping-note">🌿 Each piece is unique and handmade in Columbus, Ohio.</p>
+                    </div>
+                </div>
+            `;
+            
+            // Setup image zoom after content is loaded
+            setupImageZoom();
+        }
+        
+        function showError(message) {
+            document.getElementById('product-container').innerHTML = `
+                <div class="error-message">
+                    <h2>${message}</h2>
+                    <p><a href="index.html">Return to shop</a></p>
+                </div>
+            `;
+        }
+        
+        function showSoldOut(product) {
+            document.getElementById('product-container').innerHTML = `
+                <div class="error-message">
+                    <h2>Sorry, "${product.name}" has been sold</h2>
+                    <p><a href="index.html">View available items</a></p>
+                </div>
+            `;
+        }
+        
+        function moveCarousel(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = totalSlides - 1;
+            if (currentSlide >= totalSlides) currentSlide = 0;
+            updateCarousel();
+        }
+        
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+        
+        function updateCarousel() {
+            const track = document.getElementById('carouselTrack');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            
+            if (track) {
+                track.style.transform = `translateX(-${currentSlide * 100}%)`;
+                thumbnails.forEach((t, i) => {
+                    t.classList.toggle('active', i === currentSlide);
+                });
+            }
+        }
+        
+        function buyProduct(name, price) {
+            alert(`To purchase "${name}" for $${price}:\n\n1. Send $${price} via PayPal to [YOUR_PAYPAL_EMAIL]\n2. Include "${name}" in the note\n3. I'll reach out to confirm shipping!`);
+        }
+        
+        // Image zoom/lightbox functions
+        function setupImageZoom() {
+            // Add click handlers to all product images
+            const productImages = document.querySelectorAll('.carousel-slide img, .single-image img');
+            productImages.forEach(img => {
+                img.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent carousel navigation
+                    openLightbox(this.src);
+                });
+            });
+        }
+        
+        function openLightbox(imageSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = imageSrc;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+        
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+        
+        // Close lightbox on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+        
+        // Load product on page load
+        loadProduct();
+    </script>
+</body>
+</html>
