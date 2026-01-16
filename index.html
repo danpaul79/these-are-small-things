@@ -792,8 +792,6 @@
             <button class="filter-btn" data-category="jewelry-art">Jewelry Art</button>
             <button class="filter-btn" data-category="shell-art">Shell Art</button>
             <button class="filter-btn" data-category="button-art">Button Art</button>
-            <button class="filter-btn" data-category="wood-signs">Wood Signs</button>
-            <button class="filter-btn" data-category="wall-art">Wall Art</button>
             <button class="filter-btn" data-category="mixed-media">Mixed Media</button>
             <button class="filter-btn" data-category="dioramas">Dioramas</button>
             <button class="filter-btn" data-category="holiday-decor">Holiday Decor</button>
@@ -889,11 +887,13 @@
         
         function displayProducts(products) {
             const grid = document.getElementById('productGrid');
-            grid.innerHTML = products.map(product => `
-                <a href="product.html?id=${product.id}" class="product-card" data-category="${product.category.toLowerCase().replace(/ /g, '-')}">
+            grid.innerHTML = products.map(product => {
+                const categoryClasses = product.categories.map(cat => cat.toLowerCase().replace(/ /g, '-')).join(' ');
+                return `
+                <a href="product.html?id=${product.id}" class="product-card" data-categories="${categoryClasses}">
                     <div class="product-image">
                         <img src="images/products/${product.images[0]}" alt="${product.name}">
-                        <span class="product-category">${product.category}</span>
+                        <span class="product-category">${product.categories[0]}</span>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">${product.name}</h3>
@@ -904,24 +904,25 @@
                         </div>
                     </div>
                 </a>
-            `).join('');
+            `;
+            }).join('');
         }
         
         function setupFilters() {
             const filterButtons = document.querySelectorAll('.filter-btn');
-            
+
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const filter = button.dataset.category;
-                    
+
                     filterButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
-                    
+
                     if (filter === 'all') {
                         displayProducts(allProducts);
                     } else {
-                        const filtered = allProducts.filter(p => 
-                            p.category.toLowerCase().replace(/ /g, '-') === filter
+                        const filtered = allProducts.filter(p =>
+                            p.categories.some(cat => cat.toLowerCase().replace(/ /g, '-') === filter)
                         );
                         displayProducts(filtered);
                     }

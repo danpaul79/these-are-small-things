@@ -4,7 +4,9 @@
       "id": "seashell-ostrich-art-on-weathered-wood",
       "name": "Seashell Ostrich Art on Weathered Wood",
       "price": 35,
-      "category": "Shell Art",
+      "categories": [
+        "Shell Art"
+      ],
       "description": "This unique piece features an ostrich made of various seashells, primarily white with hints of pink. It is mounted on weathered gray wood, evoking a coastal or beachy vibe.",
       "images": [
         "1A_20251115.jpg",
@@ -23,7 +25,6 @@
       "id": "blue-silver-jewelry-flower-collage",
       "name": "Blue & Silver Jewelry Flower Collage",
       "price": 70,
-      "category": "Jewelry Art",
       "description": "Framed jewelry art featuring a collage of blue and silver-tone jewelry flowers mounted on a neutral gray background. Framed in black, creating a sophisticated and unique decorative art piece.",
       "images": [
         "2A_20251115.jpg",
@@ -37,13 +38,15 @@
         "Ready to hang": "Yes",
         "Frame size": "Approximately 8\" x 10\""
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Jewelry Art"
+      ]
     },
     {
       "id": "framed-red-jewelry-flower-collage",
       "name": "Framed Red Jewelry Flower Collage",
       "price": 70,
-      "category": "Jewelry Art",
       "description": "This framed art features a collage of red, gold, silver, and black jewelry flowers mounted on a vibrant red background. The piece is framed in silver, creating a unique decorative art piece.",
       "images": [
         "3A_20251115.jpg",
@@ -57,13 +60,15 @@
         "Ready to hang": "Yes",
         "Frame size": "Approximately 8\" x 10\""
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Jewelry Art"
+      ]
     },
     {
       "id": "floral-jewelry-collage-art-in-frame",
       "name": "Floral Jewelry Collage Art in Frame",
       "price": 70,
-      "category": "Jewelry Art",
       "description": "This framed art showcases a collage of pink roses, green leaves, and gold jewelry pieces mounted on a sleek black background, framed in gold for a decorative art piece.",
       "images": [
         "4A_20251115.jpg",
@@ -77,13 +82,15 @@
         "Ready to hang": "Yes",
         "Frame size": "Approximately 8\" x 10\""
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Jewelry Art"
+      ]
     },
     {
       "id": "bejeweled-floral-collage-art-in-frame",
       "name": "Bejeweled Floral Collage Art in Frame",
       "price": 70,
-      "category": "Jewelry Art",
       "description": "This framed artwork showcases a stunning arrangement of gems and jewelry forming a floral bouquet against a vibrant blue backdrop. Housed in an ornate gold frame, this piece adds a touch of elegance.",
       "images": [
         "5A_20251115.jpg",
@@ -97,13 +104,15 @@
         "Ready to hang": "Yes",
         "Frame size": "Approximately 8\" x 10\""
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Jewelry Art"
+      ]
     },
     {
       "id": "christmas-jewelry-collage-art-on-wood",
       "name": "Christmas Jewelry Collage Art on Wood",
       "price": 70,
-      "category": "Jewelry Art",
       "description": "This holiday artwork features Christmas-themed jewelry arranged on a stained wooden background. It has mini trees, wreaths and is accented with delicate chain details. It makes a festive decorative piece.",
       "images": [
         "6A_20251115.jpg",
@@ -117,13 +126,16 @@
         "Ready to hang": "Yes",
         "Frame size": "Approximately 8\" x 10\""
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Jewelry Art",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "silver-floral-jewelry-collage-art",
       "name": "Silver Floral Jewelry Collage Art",
       "price": 70,
-      "category": "Jewelry Art",
       "description": "This artwork features silver floral-themed jewelry arranged on a red velvet background, showcased in a silver frame. It makes an elegant decorative piece for any room or occasion.",
       "images": [
         "7A_20251115.jpg",
@@ -137,13 +149,15 @@
         "Ready to hang": "Yes",
         "Frame size": "Approximately 8\" x 10\""
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Jewelry Art"
+      ]
     },
     {
       "id": "snowmen-jewelry-collage-art",
       "name": "Snowmen Jewelry Collage Art",
       "price": 70,
-      "category": "Jewelry Art",
       "description": "This artwork features snowmen, angels, Christmas trees, and snowflakes made of jewelry and arranged on a burlap background, showcased in a grey wood frame. Elegant decor for any room.",
       "images": [
         "8A_20251115.jpg",
@@ -157,13 +171,16 @@
         "Ready to hang": "Yes",
         "Frame size": "Approximately 8\" x 10\""
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Jewelry Art",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "button-christmas-tree-on-wood-plaque",
       "name": "Button Christmas Tree on Wood Plaque",
       "price": 70,
-      "category": "Button Art",
       "description": "A charming Christmas tree is crafted from colorful buttons and adhered to a stained wooden plaque. A cheerful and festive decorative piece perfect for adding a handmade touch to any holiday display.",
       "images": [
         "9A_20251115.jpg",
@@ -174,13 +191,16 @@
         "Handmade": "Yes, one-of-a-kind",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Button Art",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "pink-button-christmas-tree-on-wood",
       "name": "Pink Button Christmas Tree on Wood",
       "price": 70,
-      "category": "Button Art",
       "description": "This artwork features a Christmas tree made of colorful pink buttons glued onto a wood board. A vibrant and cheerful holiday decor piece that adds a touch of handmade charm.",
       "images": [
         "10A_20251115.jpg",
@@ -191,13 +211,16 @@
         "Handmade": "Yes, one-of-a-kind",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Button Art",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "orange-button-apple-on-wood",
       "name": "Orange Button Apple on Wood",
       "price": 70,
-      "category": "Button Art",
       "description": "This artwork features an apple made of colorful orange buttons glued onto a wood board. A vibrant and cheerful decor piece with a handmade charm.",
       "images": [
         "11A_20251115.jpg",
@@ -208,13 +231,15 @@
         "Handmade": "Yes, one-of-a-kind",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Button Art"
+      ]
     },
     {
       "id": "green-button-christmas-tree-on-wood",
       "name": "Green Button Christmas Tree on Wood",
       "price": 70,
-      "category": "Button Art",
       "description": "Festive Christmas tree made of assorted green and blue buttons adhered to a stained wood board. A charming and handmade holiday decor piece with unique button details.",
       "images": [
         "12A_20251115.jpg",
@@ -225,13 +250,16 @@
         "Handmade": "Yes, one-of-a-kind",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Button Art",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "jeweled-figure-on-blue-velvet-frame",
       "name": "Jeweled Figure on Blue Velvet Frame",
       "price": 70,
-      "category": "Jewelry Art",
       "description": "Unique art piece featuring jeweled components arranged on a deep blue velvet background. Silver-toned frame beautifully surrounds the creative design featuring blue and silver jewelry pieces in a creative arrangement.",
       "images": [
         "13A_20251115.jpg",
@@ -245,13 +273,15 @@
         "Ready to hang": "Yes",
         "Frame size": "Approximately 8\" x 10\""
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Jewelry Art"
+      ]
     },
     {
       "id": "button-christmas-tree-on-stained-wood",
       "name": "Button Christmas Tree on Stained Wood",
       "price": 70,
-      "category": "Button Art",
       "description": "Handmade button art featuring a Christmas tree design. Various green and brown buttons are arranged on a stained wooden backing to create a whimsical holiday theme.",
       "images": [
         "14A_20251115.jpg",
@@ -262,13 +292,16 @@
         "Handmade": "Yes, one-of-a-kind",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Button Art",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "vintage-jewelry-floral-art-on-wood",
       "name": "Vintage Jewelry Floral Art on Wood",
       "price": 70,
-      "category": "Jewelry Art",
       "description": "Handmade wall art featuring vintage jewelry arranged in a floral design on a painted wooden background. This unique piece showcases repurposed brooches, earrings, and chains for a charming vintage aesthetic.",
       "images": [
         "15A_20251115.jpg",
@@ -282,13 +315,15 @@
         "Ready to hang": "Yes",
         "Frame size": "Approximately 8\" x 10\""
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Jewelry Art"
+      ]
     },
     {
       "id": "toy-and-bead-christmas-wreath",
       "name": "Toy and Bead Christmas Wreath",
       "price": 55,
-      "category": "Holiday Decor",
       "description": "Handmade Christmas wreath featuring miniature toys, red berries, and gold glitter beads on a jute rope base. This unique festive decoration adds charm to any space.",
       "images": [
         "16A_20251115.jpg",
@@ -300,13 +335,15 @@
         "Type": "Wreath",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Holiday Decor"
+      ]
     },
     {
       "id": "framed-pendant-and-stone-assemblage-art",
       "name": "Framed Pendant and Stone Assemblage Art",
       "price": 65,
-      "category": "Wall Art",
       "description": "Unique framed assemblage art featuring colorful stones, beads, and a pendant on a dark background, framed in gold. This charming piece will add a touch of elegance to any room.",
       "images": [
         "17A_20251115.jpg",
@@ -317,13 +354,15 @@
         "Handmade": "Yes, one-of-a-kind",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Mixed Media"
+      ]
     },
     {
       "id": "handmade-miniature-room-diorama-with-plants",
       "name": "Handmade Miniature Room Diorama with Plants",
       "price": 48,
-      "category": "Dioramas",
       "description": "Handmade diorama featuring miniature plants, stools, and beaded accents, displayed in a small room. This unique scene creates a whimsical and charming display. Ready to display.",
       "images": [
         "18A_20251115.jpg",
@@ -336,13 +375,15 @@
         "Dimensions": "Approximately 6\" x 8\"",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Dioramas"
+      ]
     },
     {
       "id": "holiday-tree-diorama-with-snowman",
       "name": "Holiday Tree Diorama with Snowman",
       "price": 48,
-      "category": "Dioramas",
       "description": "Handmade holiday diorama featuring painted Christmas trees and a snowman ornament. A cheerful holiday scene is displayed in a simple wooden frame. Ready to display.",
       "images": [
         "19A_20251115.jpg",
@@ -355,13 +396,16 @@
         "Dimensions": "Approximately 6\" x 8\"",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Dioramas",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "vintage-floral-embellished-mixed-media-art",
       "name": "Vintage Floral Embellished Mixed Media Art",
       "price": 65,
-      "category": "Mixed Media",
       "description": "Intricate mixed media art featuring vintage paper, floral designs, and jewelry embellishments. Mounted on a wooden board and finished with a rope hanger, it's an eye-catching, unique piece to treasure.",
       "images": [
         "21A_20251115.jpg",
@@ -374,13 +418,15 @@
         "Frame included": "Yes",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Mixed Media"
+      ]
     },
     {
       "id": "christmas-ornament-embellished-mixed-media-art",
       "name": "Christmas Ornament Embellished Mixed Media Art",
       "price": 65,
-      "category": "Mixed Media",
       "description": "Festive mixed media art featuring Christmas-themed embellishments arranged in an ornament shape. The piece is mounted on a stained wooden board. A unique, holiday-inspired piece.",
       "images": [
         "22A_20251115.jpg",
@@ -393,13 +439,16 @@
         "Frame included": "Yes",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Mixed Media",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "handmade-christmas-shadow-box-art",
       "name": "Handmade Christmas Shadow Box Art",
       "price": 65,
-      "category": "Wall Art",
       "description": "Handmade shadow box featuring Christmas miniatures in six compartments creating a festive scene. The dimensional holiday display showcases ornaments, snowmen, and a miniature Santa with his reindeer, all arranged in a charming way.",
       "images": [
         "23A_20251115.jpg",
@@ -410,13 +459,15 @@
         "Handmade": "Yes, one-of-a-kind",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Mixed Media"
+      ]
     },
     {
       "id": "vintage-christmas-brooch-wreath-framed-art",
       "name": "Vintage Christmas Brooch Wreath Framed Art",
       "price": 55,
-      "category": "Wall Art",
       "description": "Festive vintage Christmas brooches are arranged in a wreath shape, secured within a gray wooden frame, and set against a deep green background to showcase the brooches.",
       "images": [
         "24A_20251115.jpg",
@@ -428,13 +479,16 @@
         "Type": "Wreath",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Jewelry Art",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "miniature-log-cabin-framed-art",
       "name": "Miniature Log Cabin Framed Art",
       "price": 65,
-      "category": "Wall Art",
       "description": "This framed art features a miniature log cabin with a blue background and figurines, including an owl, gnome, and a frog. The small scale and rustic materials make it a charming addition to any decor.",
       "images": [
         "25A_20251115.jpg",
@@ -445,13 +499,15 @@
         "Handmade": "Yes, one-of-a-kind",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Dioramas"
+      ]
     },
     {
       "id": "button-christmas-tree-holiday-wall-art",
       "name": "Button Christmas Tree Holiday Wall Art",
       "price": 70,
-      "category": "Wall Art",
       "description": "Festive wall art features a Christmas tree design. Colorful buttons are arranged on a dark-stained wooden board, making it a charming holiday decoration for any room.",
       "images": [
         "26A_20251115.jpg",
@@ -462,13 +518,16 @@
         "Handmade": "Yes, one-of-a-kind",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Button Art",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "seashell-turkey-wall-art-decoration",
       "name": "Seashell Turkey Wall Art Decoration",
       "price": 35,
-      "category": "Shell Art",
       "description": "Festive turkey design featuring seashells arranged on a gray-washed wooden board. Charming holiday decoration for any room. Whimsical and unique, ready to hang on any wall.",
       "images": [
         "27A_20251115.jpg",
@@ -481,13 +540,16 @@
         "Mounted on": "Weathered wood",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Shell Art",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "seashell-puppy-wall-art-decoration",
       "name": "Seashell Puppy Wall Art Decoration",
       "price": 35,
-      "category": "Shell Art",
       "description": "This wall art features a charming puppy design with seashells arranged on a gray-washed wooden board with rope detailing. A unique piece for any room.",
       "images": [
         "28A_20251115.jpg",
@@ -500,13 +562,15 @@
         "Mounted on": "Weathered wood",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Shell Art"
+      ]
     },
     {
       "id": "seashell-couple-wall-art",
       "name": "Seashell Couple Wall Art",
       "price": 35,
-      "category": "Shell Art",
       "description": "Lovely seashell arrangement of a couple on a gray-washed wooden board with rope detailing. This unique piece will look good in any room; its unique arrangement adds a touch of coastal charm.",
       "images": [
         "30A_20251115.jpg",
@@ -519,13 +583,15 @@
         "Mounted on": "Weathered wood",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Shell Art"
+      ]
     },
     {
       "id": "seashell-figure-on-painted-wood",
       "name": "Seashell Figure on Painted Wood",
       "price": 35,
-      "category": "Shell Art",
       "description": "A unique seashell creation mounted on a gray-washed wooden board. This piece features a large central seashell, creatively assembled with smaller shells to form an interesting figure.",
       "images": [
         "31A_20251115.jpg",
@@ -538,13 +604,15 @@
         "Mounted on": "Weathered wood",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Shell Art"
+      ]
     },
     {
       "id": "seashell-flower-on-framed-blue-board",
       "name": "Seashell Flower on Framed Blue Board",
       "price": 35,
-      "category": "Shell Art",
       "description": "This art piece features a unique seashell flower creation mounted on a light blue board. Various shells are creatively assembled to form an interesting floral figure inside a textured frame. The piece is tied together with a twine bow.",
       "images": [
         "32A_20251115.jpg",
@@ -557,13 +625,15 @@
         "Mounted on": "Weathered wood",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Shell Art"
+      ]
     },
     {
       "id": "miniature-toy-christmas-wreath",
       "name": "Miniature Toy Christmas Wreath",
       "price": 55,
-      "category": "Holiday Decor",
       "description": "This wreath is crafted with yarn and embellished with an array of miniature Christmas themed toys. It is finished with a red ribbon bow.",
       "images": [
         "33A_20251115.jpg"
@@ -573,13 +643,15 @@
         "Type": "Wreath",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Holiday Decor"
+      ]
     },
     {
       "id": "ewe-rock-beaded-sheep-wood-sign",
       "name": "\"Ewe Rock\" Beaded Sheep Wood Sign",
       "price": 45,
-      "category": "Wood Signs",
       "description": "Handmade wood sign featuring a beaded sheep with a black felt face and legs. The words \"ewe rock\" are painted in pink above and below the sheep. Perfect for a nursery or as a gift.",
       "images": [
         "34A_20251115.jpg",
@@ -592,13 +664,15 @@
         "Type": "Wood Sign",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Button Art"
+      ]
     },
     {
       "id": "black-button-cat-wood-sign",
       "name": "Black Button Cat Wood Sign",
       "price": 70,
-      "category": "Wood Signs",
       "description": "Handmade wood sign featuring a black cat design crafted from various black buttons and embellishments. The design is secured with thin red strips. Perfect decor for any cat lover.",
       "images": [
         "35A_20251115.jpg",
@@ -611,13 +685,15 @@
         "Type": "Wood Sign",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Button Art"
+      ]
     },
     {
       "id": "pearl-snowman-tree-holiday-wood-sign",
       "name": "Pearl Snowman & Tree Holiday Wood Sign",
       "price": 45,
-      "category": "Wood Signs",
       "description": "Handmade wood sign with a pearl snowman, Christmas tree, and \"snowfall\" embellishments. The snowman has a red scarf and wooden stick arms. Great holiday decor for winter.",
       "images": [
         "36A_20251115.jpg",
@@ -630,13 +706,15 @@
         "Type": "Wood Sign",
         "Ready to display": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Mixed Media"
+      ]
     },
     {
       "id": "pearl-gold-floral-wood-block",
       "name": "Pearl & Gold Floral Wood Block",
       "price": 65,
-      "category": "Mixed Media",
       "description": "Handmade wood block featuring mixed pearl and gold-toned floral embellishments. A unique decorative piece adding elegance to your space. Great gift for weddings, anniversaries, or birthdays.",
       "images": [
         "37A_20251115.jpg",
@@ -649,13 +727,15 @@
         "Frame included": "Yes",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Mixed Media"
+      ]
     },
     {
       "id": "seashell-turtle-framed-mixed-media-art",
       "name": "Seashell Turtle Framed Mixed Media Art",
       "price": 35,
-      "category": "Shell Art",
       "description": "Handmade wall art featuring a seashell turtle on a turquoise background, accented with clear beads. Framed in distressed brown wood, ready to hang.",
       "images": [
         "38A_20251115.jpg",
@@ -668,13 +748,15 @@
         "Mounted on": "Weathered wood",
         "Ready to hang": "Yes"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Shell Art"
+      ]
     },
     {
       "id": "handmade-sheep-greeting-card",
       "name": "Handmade Sheep Greeting Card",
       "price": 8,
-      "category": "Greeting Cards",
       "description": "Handmade greeting card with a sheep design. Features a white pearl bead sheep head with a black felt face. Surrounded by pink hearts and a \"BAAAA\" speech bubble.",
       "images": [
         "39A_20251115.jpg"
@@ -684,13 +766,15 @@
         "Type": "Greeting Card",
         "Size": "Standard greeting card size"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Greeting Cards"
+      ]
     },
     {
       "id": "handmade-ewe-are-awesome-sheep-card",
       "name": "Handmade Ewe Are Awesome Sheep Card",
       "price": 8,
-      "category": "Greeting Cards",
       "description": "Handmade greeting card featuring a sheep design. It features a white pearl bead sheep head with a black felt face. The sheep is surrounded by a colorful banner and a \"EWE ARE AWESOME\" message.",
       "images": [
         "40A_20251115.jpg",
@@ -701,13 +785,15 @@
         "Type": "Greeting Card",
         "Size": "Standard greeting card size"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Greeting Cards"
+      ]
     },
     {
       "id": "handmade-happy-birthday-sheep-greeting-card",
       "name": "Handmade Happy Birthday Sheep Greeting Card",
       "price": 8,
-      "category": "Greeting Cards",
       "description": "A handmade birthday greeting card featuring two sheep with white pearl bead heads and black felt faces. The message 'HAPPY BIRTHDAY' is printed above the sheep on the brown card.",
       "images": [
         "41A_20251115.jpg",
@@ -718,13 +804,15 @@
         "Type": "Greeting Card",
         "Size": "Standard greeting card size"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Greeting Cards"
+      ]
     },
     {
       "id": "fleece-navidad-sheep-greeting-card",
       "name": "Fleece Navidad Sheep Greeting Card",
       "price": 8,
-      "category": "Greeting Cards",
       "description": "Handmade greeting card featuring a single sheep with white pearl beads and a black felt face. A Christmas tree is drawn near the sheep. The message 'FLEECE NAVIDAD' is printed on the card.",
       "images": [
         "42A_20251115.jpg"
@@ -734,13 +822,16 @@
         "Type": "Greeting Card",
         "Size": "Standard greeting card size"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Greeting Cards",
+        "Holiday Decor"
+      ]
     },
     {
       "id": "christmas-sheep-greeting-card",
       "name": "Christmas Sheep Greeting Card",
       "price": 8,
-      "category": "Greeting Cards",
       "description": "Handmade greeting card featuring a sheep made of white pearl beads and black felt with a purple scarf. There are multiple Christmas trees drawn on the kraft card stock.",
       "images": [
         "43A_20251115.jpg"
@@ -750,7 +841,11 @@
         "Type": "Greeting Card",
         "Size": "Standard greeting card size"
       },
-      "available": true
+      "available": true,
+      "categories": [
+        "Greeting Cards",
+        "Holiday Decor"
+      ]
     }
   ]
 }
