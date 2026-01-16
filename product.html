@@ -98,6 +98,7 @@
     <footer>
         <p class="footer-logo">These Are Small Things</p>
         <p class="footer-tagline">Handcrafted art from vintage treasures • Columbus, Ohio</p>
+        <p class="footer-copyright">© 2026 These Are Small Things. All rights reserved.</p>
     </footer>
     
     <script>
@@ -191,13 +192,18 @@
                 `<li><strong>${key}:</strong> ${value}</li>`
             ).join('');
             
+            // Build categories HTML
+            const categoriesHTML = product.categories.map(cat =>
+                `<span class="product-category-tag">${cat}</span>`
+            ).join(' ');
+
             container.innerHTML = `
                 <div class="product-layout">
                     <div class="product-gallery">
                         ${galleryHTML}
                     </div>
                     <div class="product-details">
-                        <span class="product-category-tag">${product.categories[0]}</span>
+                        ${categoriesHTML}
                         <h1 class="product-title">${product.name}</h1>
                         <p class="product-price">$${product.price}</p>
                         <p class="product-description">${product.description}</p>
