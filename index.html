@@ -157,22 +157,42 @@
             transform: rotate(-45deg) translate(7px, -6px);
         }
 
-        /* Hero Section */
+        /* Hero Section - Banner Style */
         .hero {
-            min-height: 100vh;
+            min-height: 70vh;
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            padding: 8rem 4% 4rem;
             position: relative;
+            background-image: url('images/hero/hero.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 8rem 4% 4rem;
+            margin-top: 0;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(61, 61, 61, 0.75) 0%,
+                rgba(61, 61, 61, 0.6) 50%,
+                rgba(61, 61, 61, 0.75) 100%
+            );
+            z-index: 1;
         }
 
         .hero-content {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 4rem;
-            align-items: center;
-            max-width: 1400px;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -203,24 +223,27 @@
 
         .hero h1 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2.8rem, 5vw, 4.2rem);
-            font-weight: 400;
+            font-size: clamp(2.8rem, 5vw, 4.5rem);
+            font-weight: 500;
             line-height: 1.15;
-            color: var(--charcoal);
+            color: white;
             margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .hero h1 em {
             font-style: italic;
-            color: var(--deep-teal);
+            color: var(--soft-gold);
         }
 
         .hero-description {
-            font-size: 1.1rem;
-            color: var(--charcoal);
-            opacity: 0.8;
-            margin-bottom: 2.5rem;
-            max-width: 480px;
+            font-size: 1.15rem;
+            color: white;
+            opacity: 0.95;
+            margin: 0 auto 2.5rem;
+            max-width: 650px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
         }
 
         .btn {
@@ -238,50 +261,25 @@
         }
 
         .btn-primary {
-            background: var(--deep-teal);
+            background: var(--soft-gold);
             color: white;
         }
 
         .btn-primary:hover {
-            background: var(--charcoal);
+            background: var(--deep-teal);
             transform: translateY(-2px);
         }
 
         .btn-secondary {
             background: transparent;
-            color: var(--charcoal);
-            border: 1px solid var(--charcoal);
+            color: white;
+            border: 2px solid white;
             margin-left: 1rem;
         }
 
         .btn-secondary:hover {
-            background: var(--charcoal);
-            color: white;
-        }
-
-        .hero-image {
-            position: relative;
-            animation: fadeInUp 1s ease 0.2s forwards;
-            opacity: 0;
-        }
-
-        .hero-image img {
-            width: 100%;
-            height: auto;
-            border-radius: 4px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
-        }
-
-        .hero-image::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            width: 100%;
-            height: 100%;
-            border: 2px solid var(--soft-gold);
-            border-radius: 4px;
-            z-index: -1;
+            background: white;
+            color: var(--charcoal);
         }
 
         /* Featured Products Section */
@@ -654,27 +652,17 @@
 
         /* Responsive */
         @media (max-width: 968px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-                text-align: center;
+            .hero {
+                min-height: 60vh;
+                padding: 6rem 4% 3rem;
             }
 
-            .hero-text {
-                order: 2;
-            }
-
-            .hero-image {
-                order: 1;
-                max-width: 500px;
-                margin: 0 auto;
-            }
-
-            .hero-image::before {
-                display: none;
+            .hero h1 {
+                font-size: clamp(2.2rem, 5vw, 3.5rem);
             }
 
             .hero-description {
-                margin: 0 auto 2.5rem;
+                font-size: 1rem;
             }
 
             .about-content {
@@ -710,6 +698,19 @@
                 box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             }
 
+            .hero {
+                min-height: 50vh;
+                padding: 5rem 4% 2.5rem;
+            }
+
+            .hero h1 {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+            }
+
+            .hero-description {
+                font-size: 0.95rem;
+            }
+
             .product-grid {
                 grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
                 gap: 1.5rem;
@@ -722,6 +723,10 @@
 
             .hero .btn {
                 display: block;
+                width: 100%;
+                max-width: 300px;
+                margin-left: auto;
+                margin-right: auto;
                 text-align: center;
             }
         }
@@ -769,9 +774,6 @@
                 <p class="hero-description">Every piece tells a story. From forgotten costume jewelry to whimsical shell creatures, I transform vintage finds into unique art you'll treasure forever.</p>
                 <a href="#shop" class="btn btn-primary">Shop the Collection</a>
                 <a href="#custom" class="btn btn-secondary">Custom Orders</a>
-            </div>
-            <div class="hero-image">
-                <img src="images/hero/P1059188.jpg" alt="Collection of vintage jewelry and materials">
             </div>
         </div>
     </section>
