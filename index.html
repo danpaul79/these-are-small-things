@@ -66,13 +66,15 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: linear-gradient(to bottom, var(--warm-cream) 0%, transparent 100%);
+            background: rgba(250, 247, 242, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
             transition: all 0.4s ease;
         }
 
         nav.scrolled {
             background: var(--warm-cream);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.12);
         }
 
         .logo {
@@ -788,15 +790,14 @@
         <div class="category-filter">
             <button class="filter-btn active" data-category="all">All</button>
             <button class="filter-btn" data-category="jewelry-art">Jewelry Art</button>
-            <button class="filter-btn" data-category="wall-art">Wall Art</button>
+            <button class="filter-btn" data-category="shell-art">Shell Art</button>
             <button class="filter-btn" data-category="button-art">Button Art</button>
             <button class="filter-btn" data-category="wood-signs">Wood Signs</button>
-            <button class="filter-btn" data-category="shell-art">Shell Art</button>
-            <button class="filter-btn" data-category="greeting-cards">Cards</button>
+            <button class="filter-btn" data-category="wall-art">Wall Art</button>
             <button class="filter-btn" data-category="mixed-media">Mixed Media</button>
             <button class="filter-btn" data-category="dioramas">Dioramas</button>
-            <button class="filter-btn" data-category="holiday-decor">Holiday</button>
-            <button class="filter-btn" data-category="wreaths">Wreaths</button>
+            <button class="filter-btn" data-category="holiday-decor">Holiday Decor</button>
+            <button class="filter-btn" data-category="greeting-cards">Cards</button>
         </div>
 
         <div class="product-grid" id="productGrid">
