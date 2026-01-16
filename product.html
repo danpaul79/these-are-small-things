@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <!-- PayPal SDK - Replace YOUR_CLIENT_ID with actual PayPal client ID -->
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=USD"></script>
     <style>
         :root{--warm-cream:#FAF7F2;--soft-gold:#C9A227;--deep-teal:#2D5A5A;--charcoal:#3D3D3D;--light-sage:#E8EDE4;--antique-white:#F5F0E8}
         *{margin:0;padding:0;box-sizing:border-box}
@@ -34,8 +36,8 @@
         .carousel-btn:hover{background:white}
         .carousel-btn.hidden{display:none}
         .thumbnails{display:flex;gap:1rem;margin-top:1rem}
-        .thumbnail{flex:1;aspect-ratio:1;border-radius:4px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border 0.2s;background:white;display:flex;align-items:center;justify-content:center;padding:0.25rem}
-        .thumbnail img{max-width:100%;max-height:100%;object-fit:contain}
+        .thumbnail{flex:1;aspect-ratio:1;border-radius:4px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border 0.2s;background:white}
+        .thumbnail img{width:100%;height:100%;object-fit:cover}
         .thumbnail.active{border-color:var(--soft-gold)}
         .single-image{width:100%;min-height:400px;border-radius:8px;overflow:hidden;background:white;box-shadow:0 4px 20px rgba(0,0,0,0.08);cursor:zoom-in;display:flex;align-items:center;justify-content:center;padding:2rem}
         .single-image img{max-width:100%;height:auto;max-height:600px;object-fit:contain;cursor:zoom-in}
@@ -46,7 +48,8 @@
         .lightbox img{max-width:95%;max-height:95%;object-fit:contain}
         .lightbox-close{position:absolute;top:20px;right:20px;color:white;font-size:40px;cursor:pointer;background:rgba(0,0,0,0.5);width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-        .product-category-tag{display:inline-block;padding:0.4rem 1rem;background:var(--light-sage);border-radius:20px;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+        .product-category-tag{display:inline-block;padding:0.4rem 1rem;background:var(--light-sage);border-radius:20px;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem;text-decoration:none;color:var(--charcoal);transition:all 0.3s ease}
+        .product-category-tag:hover{background:var(--soft-gold);color:white;transform:translateY(-2px)}
         .product-title{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:500;margin-bottom:1rem}
         .product-price{font-size:2rem;color:var(--soft-gold);margin-bottom:1.5rem}
         .product-description{font-size:1.1rem;line-height:1.8;margin-bottom:2rem}
@@ -57,6 +60,7 @@
         .btn{padding:1rem 2.5rem;border:none;border-radius:4px;font-size:1rem;cursor:pointer;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em;font-weight:400}
         .btn-primary{background:var(--soft-gold);color:white}
         .btn-primary:hover{background:#B89120;transform:translateY(-2px);box-shadow:0 4px 12px rgba(201,162,39,0.3)}
+        #paypal-button-container{margin:2rem 0;min-height:150px}
         .shipping-note{margin-top:1.5rem;font-size:0.9rem;color:#666;font-style:italic}
         .sold-out{background:#999;cursor:not-allowed}
         .sold-out:hover{background:#999;transform:none;box-shadow:none}
@@ -211,10 +215,11 @@
                 `<li><strong>${key}:</strong> ${value}</li>`
             ).join('');
             
-            // Build categories HTML
-            const categoriesHTML = product.categories.map(cat =>
-                `<span class="product-category-tag">${cat}</span>`
-            ).join(' ');
+            // Build categories HTML with clickable links
+            const categoriesHTML = product.categories.map(cat => {
+                const categorySlug = cat.toLowerCase().replace(/ /g, '-');
+                return `<a href="index.html#shop?filter=${categorySlug}" class="product-category-tag">${cat}</a>`;
+            }).join(' ');
 
             container.innerHTML = `
                 <div class="product-layout">
@@ -230,16 +235,17 @@
                             <h4>Details</h4>
                             <ul>${detailsHTML}</ul>
                         </div>
-                        <button class="btn btn-primary" onclick="buyProduct('${product.name}', ${product.price})">
-                            Purchase This Piece
-                        </button>
+                        <div id="paypal-button-container"></div>
                         <p class="shipping-note">🌿 Each piece is unique and handmade in Columbus, Ohio.</p>
                     </div>
                 </div>
             `;
-            
+
             // Setup image zoom after content is loaded
             setupImageZoom();
+
+            // Render PayPal button
+            renderPayPalButton(product);
         }
         
         function showError(message) {
@@ -284,41 +290,65 @@
             }
         }
         
-        function buyProduct(name, price) {
-            // Create modal
-            const modal = document.createElement('div');
-            modal.className = 'purchase-modal';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <h3>Purchase "${name}"</h3>
-                    <p class="price">Total: $${price}</p>
-                    <ol>
-                        <li>Send <strong>$${price}</strong> via PayPal to: <strong>[YOUR_PAYPAL_EMAIL]</strong></li>
-                        <li>Include <strong>"${name}"</strong> in the payment note</li>
-                        <li>We'll reach out to confirm shipping details!</li>
-                    </ol>
-                    <button class="btn btn-primary" onclick="closePurchaseModal()">Got it!</button>
-                </div>
-            `;
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closePurchaseModal();
-            });
-            document.body.appendChild(modal);
-        }
-
-        function closePurchaseModal() {
-            const modal = document.querySelector('.purchase-modal');
-            if (modal) {
-                modal.remove();
+        function renderPayPalButton(product) {
+            // Check if PayPal SDK is loaded
+            if (typeof paypal === 'undefined') {
+                console.error('PayPal SDK not loaded');
+                document.getElementById('paypal-button-container').innerHTML =
+                    '<p style="color: #c44;">PayPal is currently unavailable. Please contact us directly to purchase.</p>';
+                return;
             }
-        }
 
-        // Close modal on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closePurchaseModal();
-            }
-        });
+            paypal.Buttons({
+                // Set up the transaction
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            description: product.name,
+                            amount: {
+                                value: product.price.toFixed(2)
+                            }
+                        }]
+                    });
+                },
+
+                // Handle successful payment
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(orderData) {
+                        // Show success message
+                        const modal = document.createElement('div');
+                        modal.className = 'purchase-modal';
+                        modal.innerHTML = `
+                            <div class="modal-content">
+                                <h3>🎉 Payment Successful!</h3>
+                                <p>Thank you for your purchase of "${product.name}"</p>
+                                <p><strong>Order ID:</strong> ${orderData.id}</p>
+                                <p style="margin-top: 1.5rem;">We'll reach out shortly to confirm shipping details.</p>
+                                <button class="btn btn-primary" onclick="this.parentElement.parentElement.remove()">Close</button>
+                            </div>
+                        `;
+                        modal.addEventListener('click', (e) => {
+                            if (e.target === modal) modal.remove();
+                        });
+                        document.body.appendChild(modal);
+                    });
+                },
+
+                // Handle errors
+                onError: function(err) {
+                    console.error('PayPal error:', err);
+                    alert('An error occurred during payment. Please try again or contact us directly.');
+                },
+
+                // Style the button
+                style: {
+                    layout: 'vertical',
+                    color: 'gold',
+                    shape: 'rect',
+                    label: 'paypal'
+                }
+            }).render('#paypal-button-container');
+        }
         
         // Image zoom/lightbox functions
         function setupImageZoom() {

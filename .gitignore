@@ -1,2 +1,7 @@
 # Local Netlify folder
 .netlify
+
+# Local planning and notes
+FUTURE_REQUIREMENTS.md
+TODO.md
+NOTES.md

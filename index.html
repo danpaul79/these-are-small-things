@@ -840,7 +840,12 @@
             <h2 class="section-title">Get In Touch</h2>
             <p class="section-subtitle">Questions about a piece? Interested in custom work? I'd love to hear from you.</p>
             
-            <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                <input type="hidden" name="form-name" value="contact">
+                <!-- Honeypot field for spam protection -->
+                <p style="display: none;">
+                    <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+                </p>
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" required>
@@ -955,6 +960,28 @@
                     }
                 });
             });
+
+            // Check for filter parameter in URL and activate appropriate filter
+            checkURLFilter();
+        }
+
+        function checkURLFilter() {
+            const hash = window.location.hash;
+            if (hash.includes('?filter=')) {
+                const filterParam = hash.split('?filter=')[1];
+                const filterBtn = document.querySelector(`[data-category="${filterParam}"]`);
+                if (filterBtn) {
+                    // Scroll to shop section first
+                    setTimeout(() => {
+                        const shopSection = document.getElementById('shop');
+                        if (shopSection) {
+                            shopSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                        // Trigger filter click
+                        filterBtn.click();
+                    }, 100);
+                }
+            }
         }
         
         const nav = document.querySelector('nav');
