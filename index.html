@@ -840,7 +840,8 @@
             <h2 class="section-title">Get In Touch</h2>
             <p class="section-subtitle">Questions about a piece? Interested in custom work? I'd love to hear from you.</p>
             
-            <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <div id="form-messages"></div>
+            <form class="contact-form" id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="#">
                 <input type="hidden" name="form-name" value="contact">
                 <!-- Honeypot field for spam protection -->
                 <p style="display: none;">
@@ -1052,6 +1053,41 @@
                 }, 100);
             }
         });
+
+        // Handle contact form submission
+        const contactForm = document.getElementById('contact-form');
+        const formMessages = document.getElementById('form-messages');
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Get form data
+                const formData = new FormData(contactForm);
+
+                // Show loading state
+                formMessages.innerHTML = '<div class="form-feedback">Sending message...</div>';
+
+                // Submit to Netlify
+                fetch('/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(formData).toString()
+                })
+                .then(response => {
+                    if (response.ok) {
+                        formMessages.innerHTML = '<div class="form-feedback success">Thank you for your message! We\'ll get back to you soon.</div>';
+                        contactForm.reset();
+                    } else {
+                        throw new Error('Form submission failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Form submission error:', error);
+                    formMessages.innerHTML = '<div class="form-feedback error">Oops! Something went wrong. Please try again or email us directly.</div>';
+                });
+            });
+        }
     </script>
 </body>
 </html>
