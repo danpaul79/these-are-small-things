@@ -20,6 +20,11 @@
         .logo-text{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;color:var(--charcoal)}
         .nav-links{display:flex;gap:2.5rem;list-style:none}
         .nav-links a{text-decoration:none;color:var(--charcoal);font-size:0.9rem;letter-spacing:0.05em;text-transform:uppercase}
+        .mobile-menu-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:5px}
+        .mobile-menu-btn span{width:25px;height:2px;background:var(--charcoal);transition:all 0.3s ease}
+        .mobile-menu-btn.active span:nth-child(1){transform:rotate(45deg) translate(5px, 5px)}
+        .mobile-menu-btn.active span:nth-child(2){opacity:0}
+        .mobile-menu-btn.active span:nth-child(3){transform:rotate(-45deg) translate(7px, -6px)}
         .product-page{padding:8rem 4% 4rem;max-width:1400px;margin:0 auto}
         .back-link{display:inline-flex;align-items:center;gap:0.5rem;color:var(--charcoal);text-decoration:none;font-size:0.9rem;margin-bottom:2rem;opacity:0.7}
         .back-link:hover{opacity:1}
@@ -69,14 +74,13 @@
         .footer-tagline{font-size:0.9rem;opacity:0.8}
         .error-message{text-align:center;padding:4rem 2rem}
         .error-message h2{font-family:'Cormorant Garamond',serif;font-size:2rem;margin-bottom:1rem}
-        @media(max-width:900px){
+        @media(max-width:768px){
+            .nav-links{display:none}
+            .mobile-menu-btn{display:flex}
+            .nav-links.active{display:flex;flex-direction:column;position:absolute;top:100%;left:0;width:100%;background:var(--warm-cream);padding:2rem;gap:1.5rem;box-shadow:0 10px 30px rgba(0,0,0,0.1)}
             .product-layout{grid-template-columns:1fr;gap:2rem}
             .product-gallery{position:static}
-            nav{flex-wrap:wrap;justify-content:center;padding:1rem 2%;align-items:center;min-height:80px}
-            .logo{width:100%;justify-content:center;margin-bottom:0.5rem;order:1}
-            .nav-links{margin-top:0.5rem;width:100%;justify-content:center;gap:1.5rem;flex-wrap:wrap;padding:0;order:2;display:flex!important}
-            .nav-links li{display:block}
-            .product-page{padding-top:10rem}
+            .product-page{padding-top:8rem}
         }
     </style>
 </head>
@@ -89,7 +93,12 @@
             <img src="images/logo.png" alt="These Are Small Things logo - Handcrafted vintage art" width="45" height="45" onerror="this.style.display='none'">
             <span class="logo-text">These Are Small Things</span>
         </a>
-        <ul class="nav-links">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
             <li><a href="index.html#shop">Shop</a></li>
 			<li><a href="index.html#about">About</a></li>
         </ul>
@@ -114,6 +123,19 @@
     </footer>
     
     <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenuBtn.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                const isExpanded = navLinks.classList.contains('active');
+                mobileMenuBtn.setAttribute('aria-expanded', isExpanded);
+            });
+        }
+
         // Get product ID from URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
