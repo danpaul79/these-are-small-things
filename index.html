@@ -9,7 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-    
+    <link rel="preload" as="image" href="images/hero/hero.jpg" fetchpriority="high">
+    <link rel="stylesheet" href="styles.css">
+
     <style>
 
         :root {
@@ -747,11 +749,13 @@
         </style>
 </head>
 <body>
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <!-- Navigation -->
     <nav id="navbar">
         <a href="#" class="logo">
-            <img src="images/logo.png" alt="These Are Small Things">
+            <img src="images/logo.png" alt="These Are Small Things logo - Handcrafted vintage art" width="45" height="45">
             <span class="logo-text">These Are Small Things</span>
         </a>
         <ul class="nav-links" id="navLinks">
@@ -760,7 +764,7 @@
             <li><a href="#custom">Custom Orders</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu" aria-expanded="false">
             <span></span>
             <span></span>
             <span></span>
@@ -782,23 +786,23 @@
 
     <!-- Shop Section -->
     <section class="section" id="shop">
-        <div class="section-header">
+        <div id="main-content" class="section-header">
             <h2 class="section-title">The Collection</h2>
             <p class="section-subtitle">Each piece is handmade and truly one-of-a-kind. When it's gone, it's gone.</p>
         </div>
 
-        <div class="category-filter">
-            <button class="filter-btn active" data-category="all">All</button>
-            <button class="filter-btn" data-category="jewelry-art">Jewelry Art</button>
-            <button class="filter-btn" data-category="shell-art">Shell Art</button>
-            <button class="filter-btn" data-category="button-art">Button Art</button>
-            <button class="filter-btn" data-category="mixed-media">Mixed Media</button>
-            <button class="filter-btn" data-category="dioramas">Dioramas</button>
-            <button class="filter-btn" data-category="holiday-decor">Holiday Decor</button>
-            <button class="filter-btn" data-category="greeting-cards">Cards</button>
+        <div class="category-filter" role="group" aria-label="Product category filters">
+            <button class="filter-btn active" data-category="all" aria-pressed="true">All</button>
+            <button class="filter-btn" data-category="jewelry-art" aria-pressed="false">Jewelry Art</button>
+            <button class="filter-btn" data-category="shell-art" aria-pressed="false">Shell Art</button>
+            <button class="filter-btn" data-category="button-art" aria-pressed="false">Button Art</button>
+            <button class="filter-btn" data-category="mixed-media" aria-pressed="false">Mixed Media</button>
+            <button class="filter-btn" data-category="dioramas" aria-pressed="false">Dioramas</button>
+            <button class="filter-btn" data-category="holiday-decor" aria-pressed="false">Holiday Decor</button>
+            <button class="filter-btn" data-category="greeting-cards" aria-pressed="false">Cards</button>
         </div>
 
-        <div class="product-grid" id="productGrid">
+        <div class="product-grid" id="productGrid" role="region" aria-live="polite" aria-label="Product list">
             <!-- Products will be loaded dynamically from products.json -->
         </div>
     </section>
@@ -872,27 +876,45 @@
         <script>
         // Load products from JSON
         let allProducts = [];
-        
+
         async function loadProducts() {
+            const grid = document.getElementById('productGrid');
+            // Show loading state
+            grid.innerHTML = '<div class="loading-spinner">Loading products...</div>';
+
             try {
                 const response = await fetch('products.json');
+                if (!response.ok) throw new Error('Failed to load products');
                 const data = await response.json();
                 allProducts = data.products.filter(p => p.available);
                 displayProducts(allProducts);
                 setupFilters();
             } catch (error) {
                 console.error('Error loading products:', error);
+                grid.innerHTML = '<div class="error-message"><h2>Unable to load products</h2><p>Please refresh the page to try again.</p></div>';
             }
         }
-        
+
         function displayProducts(products) {
             const grid = document.getElementById('productGrid');
-            grid.innerHTML = products.map(product => {
+
+            // Handle empty state
+            if (products.length === 0) {
+                grid.innerHTML = '<div class="empty-state">No products found in this category. Try selecting a different filter.</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map((product, index) => {
                 const categoryClasses = product.categories.map(cat => cat.toLowerCase().replace(/ /g, '-')).join(' ');
                 return `
-                <a href="product.html?id=${product.id}" class="product-card" data-categories="${categoryClasses}">
+                <a href="product.html?id=${product.id}" class="product-card" data-categories="${categoryClasses}" style="--index: ${index}">
                     <div class="product-image">
-                        <img src="images/products/${product.images[0]}" alt="${product.name}">
+                        <img src="images/products/${product.images[0]}"
+                             alt="${product.name}"
+                             loading="lazy"
+                             width="300"
+                             height="300"
+                             onerror="this.src='images/placeholder.png'">
                         <span class="product-category">${product.categories[0]}</span>
                     </div>
                     <div class="product-info">
@@ -907,7 +929,7 @@
             `;
             }).join('');
         }
-        
+
         function setupFilters() {
             const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -915,8 +937,13 @@
                 button.addEventListener('click', () => {
                     const filter = button.dataset.category;
 
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Update active states and aria-pressed
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-pressed', 'false');
+                    });
                     button.classList.add('active');
+                    button.setAttribute('aria-pressed', 'true');
 
                     if (filter === 'all') {
                         displayProducts(allProducts);
@@ -932,41 +959,59 @@
         
         const nav = document.querySelector('nav');
         const revealElements = document.querySelectorAll('.reveal');
-        
+
+        // Optimized scroll handling with throttling
+        let scrollTicking = false;
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
+            if (!scrollTicking) {
+                window.requestAnimationFrame(() => {
+                    nav.classList.toggle('scrolled', window.scrollY > 50);
+                    scrollTicking = false;
+                });
+                scrollTicking = true;
             }
-            
-            revealElements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                
-                if (elementTop < windowHeight - 100) {
-                    element.classList.add('active');
-                }
+        }, { passive: true });
+
+        // Use Intersection Observer for reveal animations (more efficient)
+        if ('IntersectionObserver' in window) {
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        revealObserver.unobserve(entry.target); // Stop observing once revealed
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '-100px'
             });
-        });
-        
+
+            revealElements.forEach(element => revealObserver.observe(element));
+        } else {
+            // Fallback for older browsers
+            revealElements.forEach(element => element.classList.add('active'));
+        }
+
+        // Mobile menu handling
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const navLinks = document.getElementById('navLinks');
-        
+
         if (mobileMenuBtn) {
             mobileMenuBtn.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
+                const isExpanded = navLinks.classList.toggle('active');
                 mobileMenuBtn.classList.toggle('active');
+                mobileMenuBtn.setAttribute('aria-expanded', isExpanded);
             });
-            
+
             navLinks.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
                     navLinks.classList.remove('active');
                     mobileMenuBtn.classList.remove('active');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
                 });
             });
         }
-        
+
         loadProducts();
 
         // Handle hash navigation from product page

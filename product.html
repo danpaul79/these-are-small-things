@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Product | These Are Small Things</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
     <style>
         :root{--warm-cream:#FAF7F2;--soft-gold:#C9A227;--deep-teal:#2D5A5A;--charcoal:#3D3D3D;--light-sage:#E8EDE4;--antique-white:#F5F0E8}
         *{margin:0;padding:0;box-sizing:border-box}
@@ -72,9 +74,12 @@
     </style>
 </head>
 <body>
+    <!-- Skip to content link for accessibility -->
+    <a href="#product-container" class="skip-link">Skip to product details</a>
+
     <nav>
         <a href="index.html" class="logo">
-            <img src="images/logo.png" alt="Logo" onerror="this.style.display='none'">
+            <img src="images/logo.png" alt="These Are Small Things logo - Handcrafted vintage art" width="45" height="45" onerror="this.style.display='none'">
             <span class="logo-text">These Are Small Things</span>
         </a>
         <ul class="nav-links">
@@ -84,7 +89,7 @@
     </nav>
     <main class="product-page">
         <a href="index.html" class="back-link">← Back to Shop</a>
-        <div id="product-container">
+        <div id="product-container" role="main" aria-live="polite">
             <!-- Product content will be loaded here -->
         </div>
     </main>
@@ -112,31 +117,37 @@
         
         // Load product data
         async function loadProduct() {
+            const container = document.getElementById('product-container');
+
             if (!productId) {
                 showError('No product selected');
                 return;
             }
-            
+
+            // Show loading state
+            container.innerHTML = '<div class="loading-spinner">Loading product details...</div>';
+
             try {
                 const response = await fetch('products.json');
+                if (!response.ok) throw new Error('Failed to load product data');
                 const data = await response.json();
                 const product = data.products.find(p => p.id === productId);
-                
+
                 if (!product) {
                     showError('Product not found');
                     return;
                 }
-                
+
                 if (!product.available) {
                     showSoldOut(product);
                     return;
                 }
-                
+
                 productData = product;
                 displayProduct(product);
             } catch (error) {
                 console.error('Error loading product:', error);
-                showError('Error loading product data');
+                showError('Unable to load product data. Please refresh the page.');
             }
         }
         
@@ -153,9 +164,13 @@
                 galleryHTML = `
                     <div class="carousel-container">
                         <div class="carousel-track" id="carouselTrack">
-                            ${product.images.map(img => `
+                            ${product.images.map((img, index) => `
                                 <div class="carousel-slide">
-                                    <img src="images/products/${img}" alt="${product.name}">
+                                    <img src="images/products/${img}"
+                                         alt="${product.name} - View ${index + 1}"
+                                         loading="${index === 0 ? 'eager' : 'lazy'}"
+                                         width="600"
+                                         height="600">
                                 </div>
                             `).join('')}
                         </div>
@@ -172,8 +187,8 @@
                     </div>
                     <div class="thumbnails">
                         ${product.images.map((img, index) => `
-                            <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})">
-                                <img src="images/products/${img}" alt="Thumbnail ${index + 1}">
+                            <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})" role="button" tabindex="0" aria-label="View image ${index + 1}">
+                                <img src="images/products/${img}" alt="Thumbnail ${index + 1}" loading="lazy" width="100" height="100">
                             </div>
                         `).join('')}
                     </div>
@@ -182,7 +197,11 @@
             } else {
                 galleryHTML = `
                     <div class="single-image">
-                        <img src="images/products/${product.images[0]}" alt="${product.name}">
+                        <img src="images/products/${product.images[0]}"
+                             alt="${product.name}"
+                             loading="eager"
+                             width="600"
+                             height="600">
                     </div>
                 `;
             }
@@ -266,8 +285,40 @@
         }
         
         function buyProduct(name, price) {
-            alert(`To purchase "${name}" for $${price}:\n\n1. Send $${price} via PayPal to [YOUR_PAYPAL_EMAIL]\n2. Include "${name}" in the note\n3. I'll reach out to confirm shipping!`);
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'purchase-modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h3>Purchase "${name}"</h3>
+                    <p class="price">Total: $${price}</p>
+                    <ol>
+                        <li>Send <strong>$${price}</strong> via PayPal to: <strong>[YOUR_PAYPAL_EMAIL]</strong></li>
+                        <li>Include <strong>"${name}"</strong> in the payment note</li>
+                        <li>We'll reach out to confirm shipping details!</li>
+                    </ol>
+                    <button class="btn btn-primary" onclick="closePurchaseModal()">Got it!</button>
+                </div>
+            `;
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closePurchaseModal();
+            });
+            document.body.appendChild(modal);
         }
+
+        function closePurchaseModal() {
+            const modal = document.querySelector('.purchase-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePurchaseModal();
+            }
+        });
         
         // Image zoom/lightbox functions
         function setupImageZoom() {
