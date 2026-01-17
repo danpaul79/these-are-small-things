@@ -38,6 +38,13 @@ exports.handler = async (event, context) => {
         // Fetch data from Airtable
         const airtableUrl = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
 
+        // Debug logging
+        console.log('Airtable request:', {
+            baseId: AIRTABLE_BASE_ID,
+            tableName: AIRTABLE_TABLE_NAME,
+            url: airtableUrl
+        });
+
         const response = await fetch(airtableUrl, {
             headers: {
                 'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
@@ -59,6 +66,12 @@ exports.handler = async (event, context) => {
         }
 
         const data = await response.json();
+
+        // Debug logging
+        console.log('Airtable response:', {
+            recordCount: data.records ? data.records.length : 0,
+            hasOffset: !!data.offset
+        });
 
         // Return successful response
         return {
