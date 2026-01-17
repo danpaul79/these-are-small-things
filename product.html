@@ -188,7 +188,10 @@
         function displayProduct(product) {
             // Update page title
             document.getElementById('page-title').textContent = `${product.name} | These Are Small Things`;
-            
+
+            // Helper function to get correct image URL (full URL from Airtable or local path)
+            const getImageUrl = (img) => img.startsWith('http') ? img : `images/products/${img}`;
+
             const container = document.getElementById('product-container');
             const hasMultipleImages = product.images.length > 1;
             
@@ -200,7 +203,7 @@
                         <div class="carousel-track" id="carouselTrack">
                             ${product.images.map((img, index) => `
                                 <div class="carousel-slide">
-                                    <img src="images/products/${img}"
+                                    <img src="${getImageUrl(img)}"
                                          alt="${product.name} - View ${index + 1}"
                                          loading="${index === 0 ? 'eager' : 'lazy'}"
                                          width="600"
@@ -222,7 +225,7 @@
                     <div class="thumbnails">
                         ${product.images.map((img, index) => `
                             <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})" role="button" tabindex="0" aria-label="View image ${index + 1}">
-                                <img src="images/products/${img}" alt="Thumbnail ${index + 1}" loading="lazy" width="100" height="100">
+                                <img src="${getImageUrl(img)}" alt="Thumbnail ${index + 1}" loading="lazy" width="100" height="100">
                             </div>
                         `).join('')}
                     </div>
@@ -231,7 +234,7 @@
             } else {
                 galleryHTML = `
                     <div class="single-image">
-                        <img src="images/products/${product.images[0]}"
+                        <img src="${getImageUrl(product.images[0])}"
                              alt="${product.name}"
                              loading="eager"
                              width="600"
