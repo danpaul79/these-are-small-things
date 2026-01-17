@@ -22,7 +22,11 @@ class ProductService {
         const urlParams = new URLSearchParams(window.location.search);
         const forceJson = urlParams.get('source') === 'json';
 
-        return !forceJson && window.location.hostname !== 'localhost';
+        // TEMPORARY: Disable Airtable until Netlify function is debugged
+        // This will use JSON fallback so the site loads
+        return false;
+
+        // return !forceJson && window.location.hostname !== 'localhost';
     }
 
     /**
