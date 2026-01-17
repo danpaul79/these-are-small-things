@@ -1,6 +1,11 @@
 # Local Netlify folder
 .netlify
 
+# Environment variables (contains API keys and secrets)
+.env
+.env.local
+.env.*.local
+
 # Local planning and notes
 FUTURE_REQUIREMENTS.md
 TODO.md

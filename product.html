@@ -121,7 +121,11 @@
         <p class="footer-tagline">Handcrafted art from vintage treasures • Columbus, Ohio</p>
         <p class="footer-copyright">© 2026 These Are Small Things. All rights reserved.</p>
     </footer>
-    
+
+    <!-- Product data service -->
+    <script src="js/airtable-client.js"></script>
+    <script src="js/product-service.js"></script>
+
     <script>
         // Mobile menu toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -136,10 +140,13 @@
             });
         }
 
+        // Initialize product service
+        const productService = new ProductService();
+
         // Get product ID from URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
-        
+
         let currentSlide = 0;
         let totalSlides = 0;
         let productData = null;
@@ -157,10 +164,8 @@
             container.innerHTML = '<div class="loading-spinner">Loading product details...</div>';
 
             try {
-                const response = await fetch('products.json');
-                if (!response.ok) throw new Error('Failed to load product data');
-                const data = await response.json();
-                const product = data.products.find(p => p.id === productId);
+                // Use product service (automatically handles Airtable or JSON fallback)
+                const product = await productService.getProduct(productId);
 
                 if (!product) {
                     showError('Product not found');

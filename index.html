@@ -878,8 +878,13 @@
         </div>
     </footer>
 
+        <!-- Product data service -->
+        <script src="js/airtable-client.js"></script>
+        <script src="js/product-service.js"></script>
+
         <script>
-        // Load products from JSON
+        // Initialize product service
+        const productService = new ProductService();
         let allProducts = [];
 
         async function loadProducts() {
@@ -888,10 +893,9 @@
             grid.innerHTML = '<div class="loading-spinner">Loading products...</div>';
 
             try {
-                const response = await fetch('products.json');
-                if (!response.ok) throw new Error('Failed to load products');
-                const data = await response.json();
-                allProducts = data.products.filter(p => p.available);
+                // Use product service (automatically handles Airtable or JSON fallback)
+                const products = await productService.getProducts();
+                allProducts = products.filter(p => p.available);
                 displayProducts(allProducts);
                 setupFilters();
             } catch (error) {
