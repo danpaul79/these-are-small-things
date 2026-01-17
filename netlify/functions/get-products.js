@@ -3,7 +3,12 @@
  * Proxies requests to Airtable API to keep API key secure
  */
 
+// Use native fetch in Netlify (available in Node 18+)
+// If this fails, the function will return an error and frontend will use JSON fallback
+
 exports.handler = async (event, context) => {
+    // Set function timeout context
+    context.callbackWaitsForEmptyEventLoop = false;
     // Only allow GET requests
     if (event.httpMethod !== 'GET') {
         return {

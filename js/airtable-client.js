@@ -16,7 +16,15 @@ class AirtableClient {
      */
     async getProducts() {
         try {
-            const response = await fetch(this.apiUrl);
+            // Add 10 second timeout to prevent hanging
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+            const response = await fetch(this.apiUrl, {
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 throw new Error(`Airtable API error: ${response.status}`);
@@ -25,7 +33,11 @@ class AirtableClient {
             const data = await response.json();
             return this.transformRecords(data.records);
         } catch (error) {
-            console.error('Error fetching from Airtable:', error);
+            if (error.name === 'AbortError') {
+                console.error('Airtable request timed out after 10 seconds');
+            } else {
+                console.error('Error fetching from Airtable:', error);
+            }
             throw error;
         }
     }
