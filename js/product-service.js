@@ -1,29 +1,12 @@
 /**
  * Product Service
- * Abstracts product data source (Airtable or JSON)
- * Automatically falls back to JSON if Airtable fails
+ * Manages product data from Airtable
  */
 class ProductService {
     constructor() {
-        // Check if we should use Airtable
-        this.useAirtable = this.shouldUseAirtable();
         this.cache = null;
         this.cacheTimestamp = null;
         this.cacheDuration = 5 * 60 * 1000; // 5 minutes
-    }
-
-    /**
-     * Determine if Airtable should be used
-     * @returns {boolean}
-     */
-    shouldUseAirtable() {
-        // Check if we're in a context where Netlify functions are available
-        // and we're not explicitly using JSON fallback
-        const urlParams = new URLSearchParams(window.location.search);
-        const forceJson = urlParams.get('source') === 'json';
-
-        // Use Airtable on production/staging, JSON on localhost or if forced
-        return !forceJson && window.location.hostname !== 'localhost';
     }
 
     /**
@@ -41,15 +24,8 @@ class ProductService {
         }
 
         try {
-            let products;
-
-            if (this.useAirtable) {
-                console.log('Attempting to fetch from Airtable...');
-                products = await this.getProductsFromAirtable();
-            } else {
-                console.log('Using JSON fallback (localhost or forced)');
-                products = await this.getProductsFromJSON();
-            }
+            console.log('Fetching products from Airtable...');
+            const products = await this.getProductsFromAirtable();
 
             // Cache the results
             this.cache = products;
@@ -57,8 +33,7 @@ class ProductService {
 
             return products;
         } catch (error) {
-            console.error('Error loading products:', error);
-            // Don't fallback - let the error propagate so you know there's a problem
+            console.error('Error loading products from Airtable:', error);
             throw error;
         }
     }
@@ -75,21 +50,6 @@ class ProductService {
         // Base ID and table name will be configured via Netlify function
         const client = new AirtableClient('', 'Products');
         return await client.getProducts();
-    }
-
-    /**
-     * Get products from JSON file (fallback)
-     * @returns {Promise<Array>}
-     */
-    async getProductsFromJSON() {
-        const response = await fetch('products.json');
-
-        if (!response.ok) {
-            throw new Error('Failed to load products.json');
-        }
-
-        const data = await response.json();
-        return data.products;
     }
 
     /**
