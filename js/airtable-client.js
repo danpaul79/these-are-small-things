@@ -52,17 +52,11 @@ class AirtableClient {
             const fields = record.fields;
 
             // Extract image URLs from Airtable attachments
-            // Sort by filename to ensure consistent alphabetical order (A, B, C)
-            const images = (fields.Images || [])
-                .sort((a, b) => {
-                    const filenameA = a.filename || '';
-                    const filenameB = b.filename || '';
-                    return filenameA.localeCompare(filenameB);
-                })
-                .map(attachment => {
-                    // Airtable returns full URLs - use them directly
-                    return attachment.url || attachment.filename;
-                });
+            // Preserve the order as set in Airtable (allows manual drag-and-drop ordering)
+            const images = (fields.Images || []).map(attachment => {
+                // Airtable returns full URLs - use them directly
+                return attachment.url || attachment.filename;
+            });
 
             // Parse details JSON if it's a string
             let details = {};
