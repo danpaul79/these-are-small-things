@@ -39,11 +39,10 @@ class AirtableClient {
         return records.map(record => {
             const fields = record.fields;
 
-            // Extract image filenames from Airtable attachments
+            // Extract image URLs from Airtable attachments
             const images = (fields.Images || []).map(attachment => {
-                // Airtable returns full URLs, extract filename
-                const url = attachment.url || attachment.filename;
-                return this.extractFilename(url);
+                // Airtable returns full URLs - use them directly
+                return attachment.url || attachment.filename;
             });
 
             // Parse details JSON if it's a string
