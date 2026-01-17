@@ -46,7 +46,7 @@ class ProductService {
                 console.log('Attempting to fetch from Airtable...');
                 products = await this.getProductsFromAirtable();
             } else {
-                console.log('Using JSON fallback');
+                console.log('Using JSON fallback (localhost or forced)');
                 products = await this.getProductsFromJSON();
             }
 
@@ -56,14 +56,8 @@ class ProductService {
 
             return products;
         } catch (error) {
-            console.error('Error in getProducts:', error);
-
-            // Fallback to JSON if Airtable fails
-            if (this.useAirtable) {
-                console.warn('Airtable failed, falling back to JSON');
-                return await this.getProductsFromJSON();
-            }
-
+            console.error('Error loading products:', error);
+            // Don't fallback - let the error propagate so you know there's a problem
             throw error;
         }
     }
