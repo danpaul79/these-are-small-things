@@ -89,7 +89,60 @@ Your table should have these fields:
 
 ### Step 4: Import Your Existing Products
 
-You can manually copy data from your `products.json` file:
+You have two options for importing your products:
+
+#### Option A: Automated Migration Script (Recommended) ⚡
+
+Use the included migration script to automatically upload all 42 products with images:
+
+**Prerequisites:**
+```bash
+npm install node-fetch form-data
+```
+
+**Run the migration:**
+```bash
+# Set your credentials
+AIRTABLE_API_KEY=patXXXXXXXX AIRTABLE_BASE_ID=appXXXXXX node migrate-to-airtable.js
+
+# Or on Windows PowerShell:
+$env:AIRTABLE_API_KEY="patXXXXXXXX"; $env:AIRTABLE_BASE_ID="appXXXXXX"; node migrate-to-airtable.js
+```
+
+The script will:
+- ✅ Upload all 42 products from products.json
+- ✅ Upload all product images automatically
+- ✅ Create proper JSON formatting for Details field
+- ✅ Set categories and availability
+- ✅ Show progress and summary
+
+**Expected output:**
+```
+🚀 Starting Airtable migration...
+
+📦 Found 42 products to migrate
+
+[1/42] Uploading: Seashell Ostrich Art on Weathered Wood
+✅ Success! Record ID: recXXXXXXXXXXXXXX
+   - Uploaded 3 images
+
+[2/42] Uploading: Blue & Silver Jewelry Flower Collage
+✅ Success! Record ID: recXXXXXXXXXXXXXX
+   - Uploaded 3 images
+
+...
+
+🎉 Migration complete!
+✅ Successfully migrated: 42 products
+```
+
+**Troubleshooting:**
+- If you get permission errors, ensure your Personal Access Token has `data.records:write` scope
+- If images fail to upload, check that all image files exist in `images/products/`
+
+#### Option B: Manual CSV Import
+
+Alternatively, you can manually copy data from your `products.json` file:
 
 **From products.json:**
 ```json
@@ -145,12 +198,15 @@ You can manually copy data from your `products.json` file:
 2. Click **"Create new token"**
 3. Name it: `These Are Small Things Website`
 4. Under **Scopes**, select:
-   - `data.records:read`
+   - `data.records:read` (required for website)
+   - `data.records:write` (required ONLY if using migration script)
 5. Under **Access**, select:
    - Choose your base: "These Are Small Things - Products"
 6. Click **"Create token"**
 7. **IMPORTANT:** Copy this token immediately - you won't be able to see it again!
    - Format: `patXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`
+
+**Note:** If you're using the automated migration script (Option A above), you need the `data.records:write` scope. If you're only running the website, you only need `data.records:read`.
 
 ---
 
