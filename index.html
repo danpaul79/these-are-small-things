@@ -917,6 +917,11 @@
                 const categoryClasses = product.categories.map(cat => cat.toLowerCase().replace(/ /g, '-')).join(' ');
                 // Check if image is already a full URL (from Airtable) or needs local path prefix
                 const imageUrl = product.images[0].startsWith('http') ? product.images[0] : `images/products/${product.images[0]}`;
+                // Format price with commas and two decimal places
+                const formattedPrice = product.price.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
                 return `
                 <a href="product.html?id=${product.id}" class="product-card" data-categories="${categoryClasses}" style="--index: ${index}">
                     <div class="product-image">
@@ -932,7 +937,7 @@
                         <h3 class="product-title">${product.name}</h3>
                         <p class="product-description">${product.description}</p>
                         <div class="product-footer">
-                            <span class="product-price">$${product.price}</span>
+                            <span class="product-price">$${formattedPrice}</span>
                             <span class="view-btn">View Details →</span>
                         </div>
                     </div>

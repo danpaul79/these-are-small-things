@@ -192,6 +192,14 @@
             // Helper function to get correct image URL (full URL from Airtable or local path)
             const getImageUrl = (img) => img.startsWith('http') ? img : `images/products/${img}`;
 
+            // Helper function to format price as currency with commas
+            const formatPrice = (price) => {
+                return price.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            };
+
             const container = document.getElementById('product-container');
             const hasMultipleImages = product.images.length > 1;
             
@@ -262,7 +270,7 @@
                     <div class="product-details">
                         ${categoriesHTML}
                         <h1 class="product-title">${product.name}</h1>
-                        <p class="product-price">$${product.price}</p>
+                        <p class="product-price">$${formatPrice(product.price)}</p>
                         <p class="product-description">${product.description}</p>
                         <div class="product-details-list">
                             <h4>Details</h4>
