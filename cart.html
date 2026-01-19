@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AW_9JUdNX_sz22dniQX5K2ioO8r1sjzqgyd5lcGhRq0vzuDPvcXq4YeU2ZhOrXTNtBxi2TASWrzPOafK&currency=USD"></script>
+    <!-- PayPal SDK - enable-funding=paypal shows PayPal button, intent=capture for immediate payment -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AW_9JUdNX_sz22dniQX5K2ioO8r1sjzqgyd5lcGhRq0vzuDPvcXq4YeU2ZhOrXTNtBxi2TASWrzPOafK&currency=USD&enable-funding=paypal,venmo&intent=capture"></script>
     <style>
         :root{--warm-cream:#FAF7F2;--soft-gold:#C9A227;--deep-teal:#2D5A5A;--charcoal:#3D3D3D;--light-sage:#E8EDE4;--antique-white:#F5F0E8}
         *{margin:0;padding:0;box-sizing:border-box}
@@ -236,13 +236,40 @@
             if (items.length === 0) return;
 
             paypal.Buttons({
+                // Style configuration - show PayPal and card options
+                style: {
+                    layout: 'vertical',
+                    color: 'gold',
+                    shape: 'rect',
+                    label: 'paypal',
+                    tagline: false
+                },
+
                 createOrder: function(data, actions) {
                     return actions.order.create({
+                        intent: 'CAPTURE',
                         purchase_units: [{
                             description: `These Are Small Things - ${items.length} item${items.length > 1 ? 's' : ''}`,
                             amount: cart.getPayPalAmount(),
-                            items: cart.getPayPalItems()
-                        }]
+                            items: cart.getPayPalItems(),
+                            shipping: {
+                                options: [{
+                                    id: 'shipping-standard',
+                                    label: 'Standard Shipping',
+                                    type: 'SHIPPING',
+                                    selected: true,
+                                    amount: {
+                                        currency_code: 'USD',
+                                        value: '0.00'
+                                    }
+                                }]
+                            }
+                        }],
+                        application_context: {
+                            shipping_preference: 'GET_FROM_FILE',
+                            user_action: 'PAY_NOW',
+                            brand_name: 'These Are Small Things'
+                        }
                     });
                 },
 
@@ -251,10 +278,21 @@
                         // Get item names for confirmation
                         const itemNames = items.map(i => i.name).join(', ');
 
+                        // Get shipping address from PayPal response
+                        const shipping = orderData.purchase_units[0].shipping;
+                        const shippingName = shipping?.name?.full_name || '';
+                        const shippingAddress = shipping?.address || {};
+                        const addressLine = [
+                            shippingAddress.address_line_1,
+                            shippingAddress.address_line_2,
+                            `${shippingAddress.admin_area_2 || ''}, ${shippingAddress.admin_area_1 || ''} ${shippingAddress.postal_code || ''}`,
+                            shippingAddress.country_code
+                        ].filter(Boolean).join('<br>');
+
                         // Clear the cart
                         cart.clearCart();
 
-                        // Show success modal
+                        // Show success modal with shipping info
                         const modal = document.createElement('div');
                         modal.className = 'purchase-modal';
                         modal.innerHTML = `
@@ -263,7 +301,8 @@
                                 <p>Thank you for your purchase!</p>
                                 <p><strong>Items:</strong> ${itemNames}</p>
                                 <p><strong>Order ID:</strong> ${orderData.id}</p>
-                                <p style="margin-top: 1.5rem;">We'll reach out shortly to confirm shipping details and final cost.</p>
+                                ${shippingName ? `<p><strong>Ship to:</strong><br>${shippingName}<br>${addressLine}</p>` : ''}
+                                <p style="margin-top: 1.5rem;">We'll email you with shipping confirmation and tracking info.</p>
                                 <button class="btn btn-primary" onclick="window.location.href='index.html'">Continue Shopping</button>
                             </div>
                         `;
@@ -279,13 +318,6 @@
                 onError: function(err) {
                     console.error('PayPal error:', err);
                     showToast('An error occurred during payment. Please try again.', 'error');
-                },
-
-                style: {
-                    layout: 'vertical',
-                    color: 'gold',
-                    shape: 'rect',
-                    label: 'paypal'
                 }
             }).render('#paypal-button-container');
         }
