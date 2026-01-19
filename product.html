@@ -69,6 +69,29 @@
         .shipping-note{margin-top:1.5rem;font-size:0.9rem;color:#666;font-style:italic}
         .sold-out{background:#999;cursor:not-allowed}
         .sold-out:hover{background:#999;transform:none;box-shadow:none}
+        /* Cart Icon */
+        .nav-actions{display:flex;align-items:center;gap:1rem}
+        .cart-link{position:relative;display:flex;align-items:center;padding:0.5rem;color:var(--charcoal);text-decoration:none;transition:color 0.3s ease}
+        .cart-link:hover{color:var(--soft-gold)}
+        .cart-link svg{width:24px;height:24px}
+        .cart-badge{position:absolute;top:-2px;right:-2px;background:var(--soft-gold);color:white;font-size:0.65rem;font-weight:600;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+        /* Toast Notifications */
+        .toast-notification{position:fixed;bottom:20px;right:20px;background:var(--charcoal);color:white;padding:1rem 1.5rem;border-radius:8px;display:flex;align-items:center;gap:1rem;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:10000;animation:toastSlideIn 0.3s ease}
+        .toast-success{background:#2d5a27}
+        .toast-error{background:#8b2635}
+        .toast-info{background:var(--charcoal)}
+        .toast-close{background:none;border:none;color:white;font-size:1.2rem;cursor:pointer;padding:0;opacity:0.7}
+        .toast-close:hover{opacity:1}
+        .toast-fade-out{animation:toastFadeOut 0.3s ease forwards}
+        @keyframes toastSlideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+        @keyframes toastFadeOut{to{transform:translateX(100%);opacity:0}}
+        /* Add to Cart Button */
+        .btn-add-cart{background:var(--deep-teal);color:white;margin-bottom:1rem;width:100%}
+        .btn-add-cart:hover{background:#234a4a;transform:translateY(-2px);box-shadow:0 4px 12px rgba(45,90,90,0.3)}
+        .btn-add-cart.in-cart{background:#666;cursor:default}
+        .btn-add-cart.in-cart:hover{background:#666;transform:none;box-shadow:none}
+        .product-actions{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem}
+        .or-divider{text-align:center;color:#999;font-size:0.85rem;margin:0.5rem 0}
         footer{background:var(--charcoal);color:var(--warm-cream);text-align:center;padding:3rem 4%;margin-top:6rem}
         .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;margin-bottom:0.5rem}
         .footer-tagline{font-size:0.9rem;opacity:0.8}
@@ -93,15 +116,23 @@
             <img src="images/logo.png" alt="These Are Small Things logo - Handcrafted vintage art" width="45" height="45" onerror="this.style.display='none'">
             <span class="logo-text">These Are Small Things</span>
         </a>
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
         <ul class="nav-links" id="navLinks">
             <li><a href="index.html#shop">Shop</a></li>
-			<li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#about">About</a></li>
         </ul>
+        <div class="nav-actions">
+            <a href="cart.html" class="cart-link" aria-label="Shopping cart">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <span class="cart-badge" style="display: none;">0</span>
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </nav>
     <main class="product-page">
         <a href="index.html" class="back-link">← Back to Shop</a>
@@ -125,6 +156,7 @@
     <!-- Product data service -->
     <script src="js/airtable-client.js"></script>
     <script src="js/product-service.js"></script>
+    <script src="js/cart.js"></script>
 
     <script>
         // Mobile menu toggle
@@ -262,6 +294,11 @@
                 return `<a href="index.html#shop?filter=${categorySlug}" class="product-category-tag">${cat}</a>`;
             }).join(' ');
 
+            // Check if item is already in cart
+            const isInCart = cart.hasItem(product.id);
+            const addToCartBtnText = isInCart ? 'Already in Cart' : 'Add to Cart';
+            const addToCartBtnClass = isInCart ? 'btn btn-add-cart in-cart' : 'btn btn-add-cart';
+
             container.innerHTML = `
                 <div class="product-layout">
                     <div class="product-gallery">
@@ -276,11 +313,29 @@
                             <h4>Details</h4>
                             <ul>${detailsHTML}</ul>
                         </div>
+                        <div class="product-actions">
+                            <button class="${addToCartBtnClass}" id="addToCartBtn" ${isInCart ? 'disabled' : ''}>
+                                ${addToCartBtnText}
+                            </button>
+                            <p class="or-divider">or buy now with</p>
+                        </div>
                         <div id="paypal-button-container"></div>
                         <p class="shipping-note">🌿 Each piece is unique and handmade in Columbus, Ohio.</p>
                     </div>
                 </div>
             `;
+
+            // Setup Add to Cart button
+            const addToCartBtn = document.getElementById('addToCartBtn');
+            if (addToCartBtn && !isInCart) {
+                addToCartBtn.addEventListener('click', () => {
+                    addToCart(product);
+                    // Update button state
+                    addToCartBtn.textContent = 'Already in Cart';
+                    addToCartBtn.classList.add('in-cart');
+                    addToCartBtn.disabled = true;
+                });
+            }
 
             // Setup image zoom after content is loaded
             setupImageZoom();
