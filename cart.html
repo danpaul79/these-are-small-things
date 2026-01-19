@@ -64,6 +64,28 @@
 
         .shipping-note{margin-top:1.5rem;font-size:0.85rem;color:#666;font-style:italic;text-align:center}
 
+        /* Shipping Calculator */
+        .shipping-calculator{margin:1.5rem 0;padding:1rem;background:var(--antique-white);border-radius:8px}
+        .shipping-calculator h3{font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:1rem}
+        .shipping-form{display:flex;flex-direction:column;gap:0.75rem}
+        .shipping-form label{font-size:0.9rem;color:#666}
+        .shipping-form select,.shipping-form input{width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:4px;font-size:1rem;font-family:inherit}
+        .shipping-form select:focus,.shipping-form input:focus{outline:none;border-color:var(--soft-gold)}
+        .shipping-options{margin-top:1rem}
+        .shipping-option{display:flex;align-items:center;gap:0.75rem;padding:0.75rem;border:1px solid #ddd;border-radius:4px;margin-bottom:0.5rem;cursor:pointer;transition:all 0.2s}
+        .shipping-option:hover{border-color:var(--soft-gold)}
+        .shipping-option.selected{border-color:var(--soft-gold);background:rgba(201,162,39,0.1)}
+        .shipping-option input[type="radio"]{accent-color:var(--soft-gold)}
+        .shipping-option-details{flex:1}
+        .shipping-option-name{font-weight:500}
+        .shipping-option-time{font-size:0.85rem;color:#666}
+        .shipping-option-price{font-weight:500;color:var(--soft-gold)}
+        .shipping-error{color:#c44;font-size:0.85rem;margin-top:0.5rem}
+        .zip-input-row{display:flex;gap:0.5rem}
+        .zip-input-row input{flex:1}
+        .zip-input-row button{padding:0.75rem 1rem;background:var(--deep-teal);color:white;border:none;border-radius:4px;cursor:pointer;font-size:0.9rem;white-space:nowrap}
+        .zip-input-row button:hover{background:#234a4a}
+
         /* Purchase Success Modal */
         .purchase-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000}
         .modal-content{background:white;padding:3rem;border-radius:12px;max-width:500px;text-align:center;margin:1rem}
@@ -145,6 +167,160 @@
             });
         }
 
+        // Shipping calculator state
+        let savedZip = localStorage.getItem('shipping_zip') || '';
+        let selectedShipping = null;
+        let shippingOptions = [];
+
+        /**
+         * Shipping rates based on zones
+         * Zone 1: Ohio (local) - cheapest
+         * Zone 2: Nearby states (IN, MI, PA, WV, KY) - medium
+         * Zone 3: Rest of US - standard rates
+         */
+        const SHIPPING_ZONES = {
+            // Ohio ZIP prefixes (430-459)
+            zone1: ['430', '431', '432', '433', '434', '435', '436', '437', '438', '439', '440', '441', '442', '443', '444', '445', '446', '447', '448', '449', '450', '451', '452', '453', '454', '455', '456', '457', '458', '459'],
+            // Nearby states ZIP prefixes
+            zone2: [
+                // Indiana (460-479)
+                '460', '461', '462', '463', '464', '465', '466', '467', '468', '469', '470', '471', '472', '473', '474', '475', '476', '477', '478', '479',
+                // Michigan (480-499)
+                '480', '481', '482', '483', '484', '485', '486', '487', '488', '489', '490', '491', '492', '493', '494', '495', '496', '497', '498', '499',
+                // Pennsylvania (150-196)
+                '150', '151', '152', '153', '154', '155', '156', '157', '158', '159', '160', '161', '162', '163', '164', '165', '166', '167', '168', '169', '170', '171', '172', '173', '174', '175', '176', '177', '178', '179', '180', '181', '182', '183', '184', '185', '186', '187', '188', '189', '190', '191', '192', '193', '194', '195', '196',
+                // West Virginia (247-268)
+                '247', '248', '249', '250', '251', '252', '253', '254', '255', '256', '257', '258', '259', '260', '261', '262', '263', '264', '265', '266', '267', '268',
+                // Kentucky (400-427)
+                '400', '401', '402', '403', '404', '405', '406', '407', '408', '409', '410', '411', '412', '413', '414', '415', '416', '417', '418', '419', '420', '421', '422', '423', '424', '425', '426', '427'
+            ]
+        };
+
+        /**
+         * Get shipping zone based on ZIP code
+         */
+        function getShippingZone(zip) {
+            const prefix = zip.substring(0, 3);
+            if (SHIPPING_ZONES.zone1.includes(prefix)) return 1;
+            if (SHIPPING_ZONES.zone2.includes(prefix)) return 2;
+            return 3;
+        }
+
+        /**
+         * Calculate shipping options based on ZIP and cart contents
+         */
+        function calculateShipping() {
+            const zipInput = document.getElementById('shipping-zip');
+            const optionsContainer = document.getElementById('shipping-options');
+            const errorContainer = document.getElementById('shipping-error');
+            const zip = zipInput.value.trim().replace(/\D/g, '');
+
+            // Validate ZIP
+            if (zip.length < 5) {
+                errorContainer.textContent = 'Please enter a valid 5-digit ZIP code';
+                errorContainer.style.display = 'block';
+                optionsContainer.innerHTML = '';
+                return;
+            }
+
+            errorContainer.style.display = 'none';
+            savedZip = zip;
+            localStorage.setItem('shipping_zip', zip);
+
+            const zone = getShippingZone(zip);
+            const itemCount = cart.getItemCount();
+            const subtotal = cart.getSubtotal();
+
+            // Calculate shipping rates based on zone and item count
+            // Base rates + additional per item
+            let standardRate, priorityRate;
+
+            if (zone === 1) {
+                // Ohio - local rates
+                standardRate = 5.99 + (itemCount - 1) * 1.50;
+                priorityRate = 9.99 + (itemCount - 1) * 2.00;
+            } else if (zone === 2) {
+                // Nearby states
+                standardRate = 7.99 + (itemCount - 1) * 2.00;
+                priorityRate = 12.99 + (itemCount - 1) * 2.50;
+            } else {
+                // Rest of US
+                standardRate = 9.99 + (itemCount - 1) * 2.50;
+                priorityRate = 15.99 + (itemCount - 1) * 3.00;
+            }
+
+            // Free shipping over $75
+            const freeShippingThreshold = 75;
+            const qualifiesForFree = subtotal >= freeShippingThreshold;
+
+            shippingOptions = [
+                {
+                    id: 'standard',
+                    name: 'Standard Shipping',
+                    time: '5-7 business days',
+                    price: qualifiesForFree ? 0 : standardRate
+                },
+                {
+                    id: 'priority',
+                    name: 'Priority Shipping',
+                    time: '2-3 business days',
+                    price: qualifiesForFree ? 0 : priorityRate
+                }
+            ];
+
+            // Render shipping options
+            optionsContainer.innerHTML = shippingOptions.map((option, index) => `
+                <label class="shipping-option ${selectedShipping?.id === option.id ? 'selected' : ''}" onclick="selectShipping('${option.id}')">
+                    <input type="radio" name="shipping" value="${option.id}" ${selectedShipping?.id === option.id ? 'checked' : ''}>
+                    <div class="shipping-option-details">
+                        <div class="shipping-option-name">${option.name}</div>
+                        <div class="shipping-option-time">${option.time}</div>
+                    </div>
+                    <div class="shipping-option-price">
+                        ${option.price === 0 ? '<span style="color:#2d5a27">FREE</span>' : '$' + option.price.toFixed(2)}
+                    </div>
+                </label>
+            `).join('') + (qualifiesForFree ? '<p style="font-size:0.85rem;color:#2d5a27;margin-top:0.5rem;">🎉 You qualify for free shipping!</p>' : `<p style="font-size:0.85rem;color:#666;margin-top:0.5rem;">Free shipping on orders over $${freeShippingThreshold}</p>`);
+
+            // Auto-select first option if none selected
+            if (!selectedShipping) {
+                selectShipping(shippingOptions[0].id);
+            } else {
+                // Update the selected option with new prices
+                const updatedOption = shippingOptions.find(o => o.id === selectedShipping.id);
+                if (updatedOption) {
+                    selectShipping(updatedOption.id);
+                }
+            }
+        }
+
+        /**
+         * Select a shipping option
+         */
+        function selectShipping(optionId) {
+            selectedShipping = shippingOptions.find(o => o.id === optionId);
+
+            // Update UI
+            document.querySelectorAll('.shipping-option').forEach(el => {
+                el.classList.remove('selected');
+                if (el.querySelector(`input[value="${optionId}"]`)) {
+                    el.classList.add('selected');
+                    el.querySelector('input').checked = true;
+                }
+            });
+
+            // Update totals
+            const subtotal = cart.getSubtotal();
+            const shippingPrice = selectedShipping ? selectedShipping.price : 0;
+            const total = subtotal + shippingPrice;
+
+            document.getElementById('shipping-display').textContent = shippingPrice === 0 ? 'FREE' : '$' + cart.formatPrice(shippingPrice);
+            document.getElementById('total-display').textContent = '$' + cart.formatPrice(total);
+
+            // Re-render PayPal button with updated amount
+            renderPayPalButton();
+        }
+
         /**
          * Render cart contents
          */
@@ -192,21 +368,42 @@
                             <span>Items (${items.length})</span>
                             <span>$${cart.formatPrice(subtotal)}</span>
                         </div>
+
+                        <div class="shipping-calculator">
+                            <h3>Calculate Shipping</h3>
+                            <div class="shipping-form">
+                                <div>
+                                    <label for="shipping-zip">ZIP Code</label>
+                                    <div class="zip-input-row">
+                                        <input type="text" id="shipping-zip" placeholder="Enter ZIP code" maxlength="10" value="${savedZip || ''}">
+                                        <button type="button" onclick="calculateShipping()">Calculate</button>
+                                    </div>
+                                </div>
+                                <div id="shipping-options"></div>
+                                <div id="shipping-error" class="shipping-error" style="display:none;"></div>
+                            </div>
+                        </div>
+
                         <div class="summary-row">
                             <span>Shipping</span>
-                            <span>Calculated at checkout</span>
+                            <span id="shipping-display">${selectedShipping ? '$' + cart.formatPrice(selectedShipping.price) : 'Enter ZIP above'}</span>
                         </div>
                         <div class="summary-row total">
-                            <span>Subtotal</span>
-                            <span class="amount">$${cart.formatPrice(subtotal)}</span>
+                            <span>Total</span>
+                            <span class="amount" id="total-display">$${cart.formatPrice(subtotal + (selectedShipping ? selectedShipping.price : 0))}</span>
                         </div>
                         <div id="paypal-button-container"></div>
-                        <p class="shipping-note">Shipping costs will be confirmed via email after purchase. We'll reach out with final total and shipping options.</p>
+                        <p class="shipping-note">Ships from Columbus, Ohio. Most items ship within 2-3 business days.</p>
                     </div>
                 </div>
             `;
 
-            // Render PayPal button
+            // Restore shipping options if we have a saved ZIP
+            if (savedZip) {
+                calculateShipping();
+            }
+
+            // Render PayPal button (disabled until shipping is selected)
             renderPayPalButton();
         }
 
@@ -225,6 +422,9 @@
             const container = document.getElementById('paypal-button-container');
             if (!container) return;
 
+            // Clear existing buttons
+            container.innerHTML = '';
+
             // Check if PayPal SDK is loaded
             if (typeof paypal === 'undefined') {
                 console.error('PayPal SDK not loaded');
@@ -234,6 +434,16 @@
 
             const items = cart.getItems();
             if (items.length === 0) return;
+
+            // Require shipping to be calculated before checkout
+            if (!selectedShipping) {
+                container.innerHTML = '<p style="color: #666; text-align: center; font-size: 0.9rem; padding: 1rem;">Enter your ZIP code above to calculate shipping and enable checkout.</p>';
+                return;
+            }
+
+            const subtotal = cart.getSubtotal();
+            const shippingCost = selectedShipping.price;
+            const total = subtotal + shippingCost;
 
             paypal.Buttons({
                 // Style configuration - show PayPal and card options
@@ -246,27 +456,31 @@
                 },
 
                 createOrder: function(data, actions) {
+                    // Build PayPal order with items + shipping
+                    const paypalItems = cart.getPayPalItems();
+
                     return actions.order.create({
                         intent: 'CAPTURE',
                         purchase_units: [{
                             description: `These Are Small Things - ${items.length} item${items.length > 1 ? 's' : ''}`,
-                            amount: cart.getPayPalAmount(),
-                            items: cart.getPayPalItems(),
-                            shipping: {
-                                options: [{
-                                    id: 'shipping-standard',
-                                    label: 'Standard Shipping',
-                                    type: 'SHIPPING',
-                                    selected: true,
-                                    amount: {
+                            amount: {
+                                currency_code: 'USD',
+                                value: total.toFixed(2),
+                                breakdown: {
+                                    item_total: {
                                         currency_code: 'USD',
-                                        value: '0.00'
+                                        value: subtotal.toFixed(2)
+                                    },
+                                    shipping: {
+                                        currency_code: 'USD',
+                                        value: shippingCost.toFixed(2)
                                     }
-                                }]
-                            }
+                                }
+                            },
+                            items: paypalItems
                         }],
                         application_context: {
-                            shipping_preference: 'GET_FROM_FILE',
+                            shipping_preference: 'SET_PROVIDED_ADDRESS',
                             user_action: 'PAY_NOW',
                             brand_name: 'These Are Small Things'
                         }
