@@ -35,52 +35,76 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        // Fetch data from Airtable
-        const airtableUrl = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
+        // Base URL for the Airtable table
+        const baseUrl = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
 
         // Debug logging
         console.log('Airtable request:', {
             baseId: AIRTABLE_BASE_ID,
             tableName: AIRTABLE_TABLE_NAME,
-            url: airtableUrl
+            url: baseUrl
         });
 
-        const response = await fetch(airtableUrl, {
-            headers: {
-                'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
-                'Content-Type': 'application/json'
+        // Airtable returns at most 100 records per request and includes an `offset`
+        // token when more pages exist. Loop until there's no offset so the FULL catalog
+        // is returned — otherwise the site silently caps at the first 100 products.
+        let allRecords = [];
+        let offset;
+        let page = 0;
+        const MAX_PAGES = 50; // safety stop (~5,000 records) to avoid an infinite loop
+
+        do {
+            const url = new URL(baseUrl);
+            url.searchParams.set('pageSize', '100');
+            if (offset) {
+                url.searchParams.set('offset', offset);
             }
-        });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Airtable API error:', response.status, errorText);
+            const response = await fetch(url.toString(), {
+                headers: {
+                    'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                    'Content-Type': 'application/json'
+                }
+            });
 
-            return {
-                statusCode: response.status,
-                body: JSON.stringify({
-                    error: 'Failed to fetch from Airtable',
-                    status: response.status
-                })
-            };
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Airtable API error:', response.status, errorText);
+
+                return {
+                    statusCode: response.status,
+                    body: JSON.stringify({
+                        error: 'Failed to fetch from Airtable',
+                        status: response.status
+                    })
+                };
+            }
+
+            const data = await response.json();
+            allRecords = allRecords.concat(data.records || []);
+            offset = data.offset;
+            page++;
+        } while (offset && page < MAX_PAGES);
+
+        if (offset) {
+            // Hit the safety cap with more pages still available — log it rather than fail silently.
+            console.warn(`Stopped paginating after ${MAX_PAGES} pages; some records may be omitted.`);
         }
-
-        const data = await response.json();
 
         // Debug logging
         console.log('Airtable response:', {
-            recordCount: data.records ? data.records.length : 0,
-            hasOffset: !!data.offset
+            recordCount: allRecords.length,
+            pages: page
         });
 
-        // Return successful response
+        // Return successful response (same shape the frontend expects: { records: [...] })
         return {
             statusCode: 200,
             headers: {
                 'Content-Type': 'application/json',
                 'Cache-Control': 'public, max-age=300' // Cache for 5 minutes
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({ records: allRecords })
         };
 
     } catch (error) {
