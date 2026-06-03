@@ -1,5 +1,14 @@
 # Airtable Integration Setup Guide
 
+> **This is the one-time setup guide** for wiring up Airtable from scratch (useful if the site is
+> ever rebuilt or moved to a new Airtable base/Netlify site). For **day-to-day product management**
+> see [USER_GUIDE.md](USER_GUIDE.md), and for **ongoing maintenance/troubleshooting** see
+> [MAINTENANCE.md](MAINTENANCE.md).
+>
+> **Note:** the live site has **no JSON fallback** — if Airtable is unreachable the site shows an
+> error by design. Older sections below that mention a `products.json` fallback or `?source=json`
+> describe a behavior that was intentionally removed; they're kept only for historical context.
+
 This guide will walk you through setting up the Airtable integration for your product catalog.
 
 ## Table of Contents
@@ -233,7 +242,11 @@ Alternatively, you can manually copy data from your `products.json` file:
 |-----|-------|---------|
 | `AIRTABLE_API_KEY` | Your personal access token | `patABCD1234...` |
 | `AIRTABLE_BASE_ID` | Your base ID | `app12345abcdefg` |
-| `AIRTABLE_TABLE_NAME` | Table name | `Products` |
+| `AIRTABLE_TABLE_NAME` | **The table _ID_ — not the word "Products"** | `tbld1ues1K6yeJCfy` |
+
+> ⚠️ **Critical:** `AIRTABLE_TABLE_NAME` must be set to the table **ID** (starts with `tbl`), not
+> the table's display name. Using the name "Products" can cause "No results found" errors. Find the
+> table ID in the Airtable URL when viewing the table (`.../tblXXXXXXXX/...`).
 
 4. Click **"Save"**
 5. Trigger a new deploy: **Deploys** → **Trigger deploy** → **Deploy site**
@@ -247,9 +260,9 @@ Alternatively, you can manually copy data from your `products.json` file:
 1. Wait for the deploy to complete
 2. Visit your staging site URL
 3. Check the browser console (F12) for messages:
-   - Should see: `"Attempting to fetch from Airtable..."`
+   - Should see: `"Fetching products from Airtable..."`
    - If Airtable works: Products should load
-   - If Airtable fails: Should see `"Airtable failed, falling back to JSON"` and products load from products.json
+   - If Airtable fails: the site shows an error (there is **no** JSON fallback — this is intentional)
 
 ---
 
@@ -265,26 +278,20 @@ Alternatively, you can manually copy data from your `products.json` file:
 - [ ] Product details show correctly
 - [ ] Unavailable products are hidden
 
-**Fallback to JSON:**
-- [ ] Test with invalid API key (should fall back to products.json)
-- [ ] Test offline (should use cached data or fall back)
+**Error handling (no fallback by design):**
+- [ ] Test with an invalid API key — the site should show an error, **not** silently load old data
+- [ ] Confirm the catalog request times out after ~10s if Airtable is unreachable (no hang)
 
 **Browser Console Checks:**
 Open browser console (F12) and look for:
 ```
-Attempting to fetch from Airtable...
+Fetching products from Airtable...
 ```
-or
-```
-Using JSON fallback
-```
+If you instead see a 401/404/500 error, jump to [Troubleshooting](#troubleshooting) below.
 
-### Testing with JSON Fallback
-
-You can force the system to use products.json by adding `?source=json` to the URL:
-```
-https://your-staging-site.netlify.app/?source=json
-```
+> **Historical note:** earlier builds supported a `?source=json` fallback to a local
+> `products.json`. That file and the fallback were removed — the site is now 100% Airtable-driven,
+> so there is nothing to force-load and no `products.json` to fall back to.
 
 ---
 

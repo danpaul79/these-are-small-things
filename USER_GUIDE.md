@@ -1,269 +1,126 @@
-# These Are Small Things - JSON-Based Website Guide
+# Owner's Guide — Managing Your Shop
 
-## 🎉 What's New in Version 4
+**For:** the shop owner (no coding needed)
+**Last updated:** 2026-06-02
 
-Your website now uses a **smart JSON-based system** that makes managing products super easy!
+Your website shows your products automatically from **Airtable** — think of it as a friendly
+spreadsheet for your shop. You add and edit everything there, and the website updates itself.
+**You never have to touch any code or re-upload the website.**
 
-### Key Benefits:
-- ✅ **One product page** instead of 18 separate HTML files
-- ✅ **Easy to mark items as sold** - just change one line in products.json
-- ✅ **Easy to add new products** - just add to products.json
-- ✅ **Easy to update prices** - edit products.json
-- ✅ **Automatic image carousels** - add multiple images to any product
-- ✅ **No coding needed** - everything in products.json
+> Looking for the technical/maintenance details (hosting, deploys, troubleshooting)? That's in
+> [MAINTENANCE.md](MAINTENANCE.md). This guide is just the everyday stuff.
 
 ---
 
-## 📁 File Structure
+## The one thing to remember
 
-```
-your-site/
-├── index.html           (Main shop page - loads products from JSON)
-├── product.html         (Single template for ALL products)
-├── products.json        (★ ALL YOUR PRODUCT DATA HERE ★)
-└── images/
-    └── products/
-        ├── 1A_20251115.jpg
-        ├── 1B_20251115.jpg  (additional images for carousels)
-        └── ... (all product images)
-```
+**Everything about your products lives in Airtable.** Open your Airtable base ("These Are Small
+Things – Products"), make your change, and it shows up on the website within about **5 minutes**.
+
+That's it. No files, no zip, no uploading the site.
 
 ---
 
-## 🛍️ How to Manage Products
+## How to manage your products
 
-### Mark a Product as SOLD
+Each row in Airtable is one product. Here are the everyday tasks.
 
-1. Open `products.json`
-2. Find the product
-3. Change `"available": true` to `"available": false`
+### Mark something as SOLD
+1. Open the product's row in Airtable.
+2. **Uncheck** the **Available** box.
+3. Done — it disappears from the shop within ~5 minutes.
+
+(You're not deleting it. Leaving the row there keeps your record of the piece. To bring something
+back, just check **Available** again.)
+
+### Add a new product
+1. Add a new row in Airtable.
+2. Fill in:
+   - **Name** — the product's name (this also becomes its web address, so pick the final name).
+   - **Price** — just the number (e.g. `85`), no dollar sign.
+   - **Description** — the full description shoppers will read.
+   - **Categories** — pick one or more (e.g. "Dioramas", "Holiday"). Type a new one to create it.
+   - **Images** — drag your photos in. **The first photo is the main thumbnail.** Drag to reorder.
+   - **Details** — optional extra info in a specific format (see "Filling in Details" below).
+   - **Available** — check the box so it shows in the shop.
+3. Save. It appears on the site within ~5 minutes.
+
+### Change a price or description
+- Just edit the cell in Airtable. That's the whole task.
+
+### Add or reorder a product's photos
+- Open the row, drag photos into the **Images** field, and **drag them into the order you want.**
+  The first one is the thumbnail. The website shows a photo carousel automatically when there's
+  more than one.
+
+### Reorder photos the right way
+The website shows photos in **exactly the order they appear in Airtable.** If a photo is in the
+wrong spot, drag it in Airtable — don't worry about file names. (File names don't matter at all.)
+
+---
+
+## Filling in "Details"
+
+The **Details** field holds extra specs (materials, size, etc.). It has to be written in a simple
+structured format called JSON. The easiest approach: copy this template and change the words.
 
 ```json
 {
-  "id": "vintage-jewelry-tree",
-  "name": "Vintage Jewelry Tree on Teal",
-  "price": 85,
-  ...
-  "available": false    ← Change this!
+  "Handmade": "Yes, one-of-a-kind",
+  "Type": "Diorama",
+  "Dimensions": "Approximately 6\" x 8\"",
+  "Ready to display": "Yes"
 }
 ```
 
-4. Save the file
-5. Re-upload to Netlify
+Rules that keep it from breaking:
+- Keep the curly braces `{ }`.
+- Each line is `"Label": "Value",` with a comma after every line **except the last**.
+- Use straight quotes `"` (not curly “smart quotes”).
+- If a value itself needs a quote (like inches), write it as `\"` — see the Dimensions line above.
 
-**That's it!** The product will automatically disappear from the shop page.
-
----
-
-### Add a New Product
-
-1. Open `products.json`
-2. Copy an existing product entry
-3. Update all the fields:
-
-```json
-{
-  "id": "new-product-slug",        ← URL-friendly name
-  "name": "New Product Name",      ← Display name
-  "price": 75,                     ← Price
-  "category": "Jewelry Art",       ← Category
-  "description": "Description...", ← Full description
-  "images": [                      ← Image filenames
-    "19A_20251115.jpg",
-    "19B_20251115.jpg"            ← Optional: add more for carousel
-  ],
-  "details": {                     ← Product details
-    "Materials": "...",
-    "Frame size": "...",
-    "Style": "...",
-    "Handmade": "Yes, one-of-a-kind",
-    "Ready to hang": "Yes"
-  },
-  "available": true
-}
-```
-
-4. Add a comma after the previous product
-5. Upload your product images to `images/products/`
-6. Save and re-upload to Netlify
+If a product's details ever look wrong on the site, the Details JSON probably has a typo. Paste it
+into https://jsonlint.com to find the mistake, or just simplify it.
 
 ---
 
-### Update a Price
+## Good to know
 
-1. Open `products.json`
-2. Find the product
-3. Change the price number
-
-```json
-"price": 85,  ← Change to: "price": 90,
-```
-
-4. Save and re-upload
-
----
-
-## 🖼️ How Images Work
-
-### Single Image Products
-Just list one image:
-```json
-"images": ["2A_20251115.jpg"]
-```
-
-### Multiple Image Products (Carousel)
-List multiple images - carousel appears automatically:
-```json
-"images": [
-  "13A_20251115.jpg",
-  "13B_20251115.jpg",
-  "13C_20251115.jpg"
-]
-```
-
-The website automatically:
-- Shows a carousel if multiple images exist
-- Shows navigation arrows
-- Shows thumbnails below
-- Shows a single image if only one exists
+- **Changes take up to ~5 minutes** to appear (the site briefly remembers the old version to stay
+  fast). To see a change right away, refresh the page with **Ctrl+Shift+R** (Windows) or
+  **Cmd+Shift+R** (Mac).
+- **Renaming a product changes its web link.** If you've shared a direct link to a product and then
+  rename it, the old link stops working. Renaming is fine — just know that.
+- **Categories are automatic.** Any category you use in Airtable becomes a filter button on the
+  shop page. No setup needed.
+- **You can't oversell a one-of-a-kind piece.** The cart won't let a shopper add the same item
+  twice, and quantity is always 1.
 
 ---
 
-## 📂 Product Categories
+## When something looks wrong
 
-Current categories:
-- **Jewelry Art** - jewelry-based artwork
-- **Vintage Collections** - buttons, keys, shells
-- **Dioramas** - miniature scenes
-
-To add a new category:
-1. Just use it in products.json: `"category": "New Category"`
-2. It will automatically appear in the filter buttons
-
----
-
-## 🔧 Common Tasks
-
-### Change Product Description
-Edit the `"description"` field in products.json
-
-### Change Product Details
-Edit the `"details"` object in products.json
-
-### Reorder Products
-Products appear in the order they're listed in products.json.
-Just cut and paste to reorder.
-
-### Update PayPal Email
-1. Open `product.html`
-2. Find `[YOUR_PAYPAL_EMAIL]`
-3. Replace with your actual PayPal email
-4. Save and re-upload
+| What you see | Try this |
+|---|---|
+| A change isn't showing up | Wait 5 minutes, then hard-refresh (Ctrl/Cmd+Shift+R). |
+| A photo is missing | Make sure it's actually uploaded in that row's **Images** field. |
+| Photos in the wrong order | Drag them into order in the Airtable **Images** field. |
+| Product details look garbled | The **Details** JSON has a typo — check it at jsonlint.com. |
+| The whole shop won't load | This is a technical issue — see [MAINTENANCE.md](MAINTENANCE.md) or ask Claude Code to help (point it at that file). |
 
 ---
 
-## 🚀 Deploying Updates
+## Backing up your catalog
 
-1. Edit `products.json` with your changes
-2. Zip the entire folder (make sure index.html, product.html, products.json are at root level)
-3. Upload to Netlify
+Once in a while (a quarterly habit is plenty), make a backup of your products:
 
-**Or** you can:
-1. Just upload the edited `products.json` file to Netlify
-2. It will automatically update without re-uploading everything!
+1. In Airtable, open the Products table.
+2. Use the **"..."** menu → **Download CSV**.
+3. Save the file somewhere safe. Keep the last few.
 
----
-
-## 📸 Adding Product Images
-
-### Option 1: Edit the Zip
-1. Extract the zip file
-2. Add your images to `images/products/`
-3. Update the filenames in products.json
-4. Re-zip and upload
-
-### Option 2: Through Netlify
-1. Upload images directly through Netlify's file manager
-2. Update products.json to reference the new images
-
-**Image naming convention:**
-- Format: `{NUMBER}{LETTER}_20251115.jpg`
-- Examples: `1A_20251115.jpg`, `1B_20251115.jpg`, `19A_20251115.jpg`
-- The letter (A, B, C) indicates different views of the same product
+That's your safety net if anything ever happens to the Airtable base.
 
 ---
 
-## ✨ Tips
-
-1. **Always test locally** - open index.html in your browser before uploading
-2. **JSON syntax matters** - missing commas or quotes will break things
-3. **Use a JSON validator** - paste your JSON into jsonlint.com to check for errors
-4. **Keep backups** - save a copy of products.json before making changes
-5. **Image optimization** - compress images before uploading to keep site fast
-
----
-
-## 🆘 Troubleshooting
-
-**Products not showing up?**
-- Check products.json syntax with jsonlint.com
-- Make sure `"available": true`
-- Check that image filenames match exactly
-
-**Images not loading?**
-- Verify image filenames in products.json match actual files
-- Check that images are in `images/products/` folder
-
-**Carousel not working?**
-- Make sure you have multiple images listed in the "images" array
-- Verify all image files exist
-
----
-
-## 📝 Example: Complete Product Entry
-
-```json
-{
-  "id": "vintage-jewelry-tree",
-  "name": "Vintage Jewelry Tree on Teal",
-  "price": 85,
-  "category": "Jewelry Art",
-  "description": "A stunning jewelry tree artwork created from vintage brooches, earrings, and beads arranged on a rich teal velvet background.",
-  "images": [
-    "1A_20251115.jpg",
-    "1B_20251115.jpg",
-    "1C_20251115.jpg"
-  ],
-  "details": {
-    "Materials": "Vintage jewelry, beads, teal velvet, ornate gold frame",
-    "Frame size": "Approximately 11\" x 14\"",
-    "Style": "Elegant, Nature-inspired",
-    "Handmade": "Yes, one-of-a-kind",
-    "Ready to hang": "Yes"
-  },
-  "available": true
-}
-```
-
-This creates a product with:
-- A 3-image carousel
-- Full product details
-- Available for purchase
-- Appears in "Jewelry Art" category
-
----
-
-## 🎯 Quick Reference
-
-| Task | File to Edit | What to Change |
-|------|-------------|----------------|
-| Mark as sold | products.json | `"available": false` |
-| Change price | products.json | `"price": 90` |
-| Add product | products.json | Add new entry |
-| Update description | products.json | `"description": "..."` |
-| Add images | products.json + upload images | `"images": [...]` |
-| Update PayPal | product.html | `[YOUR_PAYPAL_EMAIL]` |
-
----
-
-**Need help?** The JSON structure is self-explanatory - just look at existing products as templates!
+*That's everything for day-to-day running of the shop. For anything technical, the
+[MAINTENANCE.md](MAINTENANCE.md) runbook (and Claude Code) has you covered.*
