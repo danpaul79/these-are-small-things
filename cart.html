@@ -480,7 +480,13 @@
                             items: paypalItems
                         }],
                         application_context: {
-                            shipping_preference: 'SET_PROVIDED_ADDRESS',
+                            // Collect the buyer's shipping address from their PayPal account
+                            // (or the card-checkout form). GET_FROM_FILE is what onApprove
+                            // expects when it reads purchase_units[0].shipping back.
+                            // NOTE: do NOT use SET_PROVIDED_ADDRESS unless we actually supply
+                            // a shipping address in purchase_units — doing so makes PayPal
+                            // reject createOrder for every funding source.
+                            shipping_preference: 'GET_FROM_FILE',
                             user_action: 'PAY_NOW',
                             brand_name: 'These Are Small Things'
                         }
