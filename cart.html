@@ -167,6 +167,14 @@
             });
         }
 
+        // ── Online checkout master switch ───────────────────────────────────────────
+        // false = show a "checkout coming soon" note instead of the real PayPal buttons.
+        // To turn real PayPal / Venmo / card checkout back ON:
+        //   1. Put marika's LIVE PayPal client-id in the SDK <script> tag near the top of
+        //      this file (replace the current sandbox/test client-id).
+        //   2. Set CHECKOUT_ENABLED = true below.
+        const CHECKOUT_ENABLED = false;
+
         // Shipping calculator state
         let savedZip = localStorage.getItem('shipping_zip') || '';
         let selectedShipping = null;
@@ -434,6 +442,17 @@
 
             const items = cart.getItems();
             if (items.length === 0) return;
+
+            // TEMPORARY: online checkout is OFF until the LIVE PayPal account is ready.
+            // (Re-enable via CHECKOUT_ENABLED at the top of this script + live client-id.)
+            if (!CHECKOUT_ENABLED) {
+                container.innerHTML = `
+                    <div style="text-align:center;padding:1.25rem;border:1px dashed #c9a227;border-radius:8px;background:rgba(201,162,39,0.07);">
+                        <p style="margin:0 0 0.4rem;font-weight:600;">🛠️ Online checkout is being set up</p>
+                        <p style="margin:0;font-size:0.9rem;color:#666;">Card &amp; PayPal payments will be available here very soon. To purchase a piece now, please <a href="index.html#contact" style="color:#c9a227;">send us a message</a> and we'll arrange it for you.</p>
+                    </div>`;
+                return;
+            }
 
             // Require shipping to be calculated before checkout
             if (!selectedShipping) {
